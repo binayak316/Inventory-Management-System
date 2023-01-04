@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'product_app',
+    'third_party',
+    'purchase_app',
+    'sales_app',
     
 ]
 
@@ -99,8 +103,7 @@ JAZZMIN_SETTINGS = {
 
         {"name": "Contact", "url": ""},
 
-        # App with dropdown menu to all its models pages (Permissions checked against models)
-        {"app": "books"},
+        
     ],  
      #############
     # User Menu #
@@ -128,18 +131,17 @@ JAZZMIN_SETTINGS = {
     "hide_models": [],
     # "hide_models": ["auth.user"], ?tyo model hide gardinxa side ko
 
-    # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
-    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
+    #
 
     # Custom links to append to app groups, keyed on app name
     # naya icon thapne tala
     "custom_links": {
-        "books": [{
-            "name": "Make Messages", 
-            "url": "make_messages", 
-            "icon": "fas fa-comments",
-            "permissions": ["books.view_book"]
-        }]
+        # "books": [{
+        #     "name": "Make Messages", 
+        #     "url": "make_messages", 
+        #     "icon": "fas fa-comments",
+        #     "permissions": ["books.view_book"]
+        # }]
     },
 
     #############
@@ -307,6 +309,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
