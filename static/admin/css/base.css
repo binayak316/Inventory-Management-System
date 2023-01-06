@@ -1,0 +1,26 @@
+
+.login_button{
+    background-color:rgb(252, 111, 4) !important;
+    color:white !important;
+    border:none !important;
+}
+.forget_password_link{
+    margin-bottom:5px;
+    color:rgb(126, 123, 123);
+    cursor: pointer;
+}
+.forget_locker{
+    gap:5px;
+    margin-bottom: -10px;
+}
+.forget_locker i{
+    color: rgb(126, 123, 123);
+}
+
+/* login again page starts */
+.log_in_again_button{
+    background-color:rgb(252, 111, 4) !important;
+    color:white !important;
+    border:none !important;
+}
+/* login again page ends */

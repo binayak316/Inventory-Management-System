@@ -49,12 +49,14 @@ coverage.xml
 # Translations
 *.mo
 *.pot
+.env/
+.env
 
 # Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-media/
-static/
-staticfiles/
-staticfiles_build/
+# *.log
+# local_settings.py
+# db.sqlite3
+# media/
+# static/
+# staticfiles/
+# staticfiles_build/

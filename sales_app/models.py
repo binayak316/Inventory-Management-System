@@ -26,7 +26,7 @@ class Sales(models.Model):
         ordering = ('created_at',)
 
     def __str__(self):
-        return self.status
+        return str(self.grand_total)
 
 class SalesItem(models.Model):
     sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
