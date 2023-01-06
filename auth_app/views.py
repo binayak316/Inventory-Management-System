@@ -12,7 +12,7 @@ def register_page(request):
         # print(register_form)
         if register_form.is_valid():
             register_form.save()
-            return redirect('/')
+            return redirect('/dashboard/login/')
     else:
         register_form = MyUserForm()
 
