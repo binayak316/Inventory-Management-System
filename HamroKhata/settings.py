@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'third_party',
     'purchase_app',
     'sales_app',
+    'rest_framework'
     
 ]
 
@@ -57,8 +59,7 @@ JAZZMIN_SETTINGS = {
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
     "site_brand": "Hamro Khata",
 
-    # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "images/App logo.png",
+    "site_logo": "images/App logo.png", #yo top ma dekhine logo ho favicon
 # 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
     # "login_logo": "images/logo.png",
@@ -154,6 +155,14 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+        "product_app.Product":"		fas fa-archive",
+        "product_app.category":"fab fa-cuttlefish",
+        "purchase_app.purchaseItem":"	fas fa-cart-arrow-down",
+        "purchase_app.purchase":"	fab fa-pinterest-p",
+        "sales_app.salesItem":"fab fa-get-pocket",
+        "sales_app.sales":"fab fa-stripe-s",
+        "third_party.customer":"fas fa-user-friends",
+        "third_party.vendor":"	fas fa-user-cog"
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -184,7 +193,13 @@ JAZZMIN_SETTINGS = {
     # - carousel
     "changeform_format": "carousel",
     # override change forms on a per modeladmin basis
-    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+    "changeform_format_overrides": {
+
+        "auth.user": "collapsible",
+        "auth.group": "vertical_tabs",
+        "purchase_app.purchase" : "collapsible",
+         
+         },
     # Add a language dropdown into the admin
     # "language_chooser": True,
 
@@ -319,3 +334,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    # 'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS':
+    True,  #rotate_refresh_tokens lai false banaune vane (access + refresh) dubai tokens painxa
+}

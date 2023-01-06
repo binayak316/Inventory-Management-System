@@ -25,7 +25,7 @@ class Purchase(models.Model):
         ordering = ('created_at',)
 
     def __str__(self):
-        return self.status
+        return str(self.grand_total)
 
 
 class PurchaseItem(models.Model):
