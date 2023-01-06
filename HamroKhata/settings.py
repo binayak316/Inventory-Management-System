@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'third_party',
     'purchase_app',
     'sales_app',
+    'auth_app',
     'rest_framework'
     
 ]
@@ -319,6 +320,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+
+
+AUTH_USER_MODEL = 'auth_app.MyUser'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
