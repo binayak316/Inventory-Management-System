@@ -28,13 +28,13 @@
 <!-- Container -->
 <div id="container">
 
+
     {% if not is_popup %}
     <!-- Header -->
     {% block header %}
     <div id="header">
         <div id="branding">
         {% block branding %}{% endblock %}
-        <!-- Example2 -->
         </div>
         {% block usertools %}
         {% if has_permission %}
@@ -56,7 +56,9 @@
                 {% if user.has_usable_password %}
                 <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
                 {% endif %}
-                <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+                <!-- <form id="logout-form" method="post" action="{% url 'admin:logout' %}"> -->
+                  <form id="logout-form" method="post" action="{% url 'logout' %}">
+
                     {% csrf_token %}
                     <button type="submit">{% translate 'Log out' %}</button>
                 </form>
