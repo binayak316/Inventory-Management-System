@@ -1,108 +1,138 @@
-
 {% extends 'auth_app/base.html' %}
 {% load static %}
+
 {% block content %}
-<section class="vh-100" style="background-color: #eee;">
-    <div class="container h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-12 col-xl-11">
-          <div class="card text-black" style="border-radius: 25px;">
-            <div class="card-body p-md-5">
-              <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-
-                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up  <br> Hamro Khata</p>
-  
-                  <form class="mx-1 mx-md-4" method="POST">
-                        {% csrf_token %}
-                    <div class="d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                      <div class="form-outline flex-fill mb-0">
-                        <input type="text" id="first_name" name="first_name" class="form-control" />
-                        <label class="form-label"  for="form3Example1c">First Name</label>
-                      </div>
-                    </div>
-
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                          <input type="text" id="last_name" name="last_name" class="form-control" />
-                          <label class="form-label"  for="form3Example1c">Last Name</label>
-                        </div>
-                      </div>
-                    
-                    <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
-                        <input type="text" id="last_name" name="username" class="form-control" />
-                        <label class="form-label"  for="form3Example1c">Username</label>
-                    </div>
-                    </div>
-  
-                    <div class="d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                      <div class="form-outline flex-fill mb-0">
-                        <input type="email" id="form3Example3c"  name="email" class="form-control" />
-                        <label class="form-label" for="form3Example3c">Your Email</label>
-                      </div>
-                    </div>
-  
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                          <input type="number" id="form3Example3c"  name="phone" class="form-control" />
-                          <label class="form-label" for="form3Example3c"> phone no.</label>
-                        </div>
-                      </div>
-                    
-
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                          <input type="password" id="form3Example4c"  name="password1" class="form-control" />
-                          <label class="form-label" for="form3Example4c">Password</label>
-                        </div>
-                      </div>
-  
-                    <div class="d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-key fa-lg me-3 fa-fw"></i>
-                      <div class="form-outline flex-fill mb-0">
-                        <input type="password" id="form3Example4cd" name="password2" class="form-control" />
-                        <label class="form-label"  for="form3Example4cd">Repeat your password</label>
-                      </div>
-                    </div>
-
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                          <!-- <input type="text" id="form3Example4c" name="position" class="form-control" /> -->
-                          <label class="form-label"  for="form3Example4c">Position</label>
-                          <select name="position" id="">
-                            <option value="staff">Staff</option>
-                            <option value="administrator">Administrator</option>
-                          
-                          </select>
-                        </div>
-                      </div>
-  
-
-  
-                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                        <input type="submit" class="btn btn-primary btn-lg" value="Register">
-                    </div>
-  
-                  </form>
-  
-                </div>
-              </div>
+<div class="container mt-4 signupForm">
+  <form action="" method="POST">
+    <div class="row signupRow">
+      <div class="col-3 left-side">
+      </div>
+      <div class="col-6 centralpart">
+        <div class="col-12 mt-2 logoImage">
+          <img src="{% static '/images/logo.png' %}" alt="App Logo">
+        </div>
+        <div class="d-flex mt-4">
+          <div class="col-6">
+            <label for="firstname">Firstname</label>
+            <span class="text-danger small">*</span>
+            <div class="form-group">
+              <input class="form-control registerInput" type="text" name="firstname" id="firstname" value=""
+                placeholder="Enter your first name">
+            </div>
+          </div> &nbsp;
+          <div class="col-6">
+            <label for="lastname">Lastname</label>
+            <span class="text-danger small">*</span>
+            <div class="form-group">
+              <input class="form-control registerInput" type="text" name="lastname" id="lastname" value=""
+                placeholder="Enter your last name">
             </div>
           </div>
-        </div>
+        </div><br>
+        <div class="d-flex">
+          <div class="col-6">
+            <label for="username">Username</label>
+            <span class="text-danger small">*</span>
+            <div class="form-group">
+              <input class="form-control registerInput" type="username" name="username" id="username" value=""
+                placeholder="Enter your Username">
+            </div>
+          </div> &nbsp;
+          <div class="col-6">
+            <label for="position">Position</label>
+            <span class="text-danger small">*</span>
+            <select class="form-select registerInput" name="position" id="position" value="position">
+              <option value="Male">Staff</option>
+              <option value="Female">Administrator</option>
+            </select>
+          </div>
+        </div><br>
+        <div class="col-12">
+          <label for="email">Email</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group">
+            <input class="form-control registerInput" type="email" name="email" id="email" value=""
+              placeholder="Enter your email">
+          </div>
+        </div><br>
+        <div class="col-12">
+          <label for="password">New Password</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group d-flex">
+            <input class="form-control registerInput" type="password" name="password" id="password"
+              placeholder="Enter Your New Password">
+            <div class="input-group-append eyeButton">
+              <span class="input-group-text" onclick="new_password_show_hide();">
+                <i class="fa-solid fa-eye" id="show_eye"></i>
+                <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
+              </span>
+            </div>
+          </div>
+        </div> <br>
+        <div class="col-12">
+          <label for="confirmPassword">Confirm Password</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group d-flex">
+            <input class="form-control registerInput" type="password" name="confirmPassword" id="confirmPassword"
+              placeholder="Confirm Your Password">
+            <div class="input-group-append">
+              <span class="input-group-text eyeButton" onclick="confirm_password_show_hide();">
+                <i class="fa-solid fa-eye" id="confirm_show_eye"></i>
+                <i class="fas fa-eye-slash d-none" id="confirm_hide_eye"></i>
+              </span>
+            </div>
+          </div>
+        </div> <br>
+        <div class="col-12 text-center submitButton">
+          <button class="btn btn">Sign up</button>
+        </div><br>
+        <div class="col-12 d-flex justify-content-center">
+          <p style="color: gray;">Already have an account?</p>&nbsp;
+          <a href="/login" class="loginLink">Login</a>
+        </div> <br>
+      </div>
+      <div class="col-3 right-side">
       </div>
     </div>
-  </section>
+  </form>
+</div>
 
 
+<script>
+  // New Password show/hide eye button
+  function new_password_show_hide() {
+    var x = document.getElementById("password");
+    var show_eye = document.getElementById("show_eye");
+    var hide_eye = document.getElementById("hide_eye");
+    hide_eye.classList.remove("d-none");
+    if (x.type === "password") {
+      x.type = "text";
+      show_eye.style.display = "none";
+      hide_eye.style.display = "block";
+    } else {
+      x.type = "password";
+      show_eye.style.display = "block";
+      hide_eye.style.display = "none";
+    }
+  }
 
+
+  // Confirm Password show/hide eye button
+  function confirm_password_show_hide() {
+    var x = document.getElementById("confirmPassword");
+    var show_eye = document.getElementById("confirm_show_eye");
+    var hide_eye = document.getElementById("confirm_hide_eye");
+    hide_eye.classList.remove("d-none");
+    if (x.type === "password") {
+      x.type = "text";
+      show_eye.style.display = "none";
+      hide_eye.style.display = "block";
+    } else {
+      x.type = "password";
+      show_eye.style.display = "block";
+      hide_eye.style.display = "none";
+    }
+  }
+</script>
 
 {% endblock %}
