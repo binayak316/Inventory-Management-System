@@ -1,0 +1,98 @@
+body {
+    background-color: lightgray;
+}
+
+.loginContainer {
+    background-color: white;
+    width: 30% !important;
+    margin-top: 6%;
+    box-shadow: 2px 2px 2px gray;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.logoImageLogin {
+    width: 100%;
+    background-color: #d9d9d9;
+    cursor: pointer;
+}
+
+.logoImageLogin img {
+    height: 80px;
+    margin-left: 13%;
+    margin-bottom: -1.5%;
+}
+
+.logo {
+    border-bottom: 1px solid gray;
+    padding: 15px;
+    text-align: center;
+    background-color: whitesmoke;
+
+}
+
+.login_heading p {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.row button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 2px;
+}
+
+.resetPassword a {
+    text-decoration: none;
+    cursor: pointer;
+    margin: 25%;
+}
+
+.resetPassword a:hover {
+    text-decoration: underline;
+}
+
+.passwordRow {
+    cursor: pointer;
+}
+
+.registerUser {
+    display: flex;
+    margin: 18%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.registerUser a {
+    text-decoration: none;
+}
+
+.registerUser a:hover {
+    text-decoration: underline;
+}
+
+.input-group-append span {
+    padding: 10px;
+    margin-left: -40px;
+    background: transparent;
+    border: none;
+}
+
+.col-md-12 label {
+    margin-bottom: 0;
+}
+
+form .loginButton {
+    width: 100%;
+    background-color: #FF7A00;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+
+form .loginButton:hover {
+    background-color: hsl(29, 84%, 47%);
+    color: white;
+    font-weight: bold;
+}
