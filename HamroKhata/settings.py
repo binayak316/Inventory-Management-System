@@ -346,3 +346,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS':
     True,  #rotate_refresh_tokens lai false banaune vane (access + refresh) dubai tokens painxa
 }
+
+
+LOGIN_URL = '/login'
