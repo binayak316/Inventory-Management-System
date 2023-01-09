@@ -4,6 +4,7 @@
 {% block content %}
 <div class="container mt-4 signupForm">
   <form action="" method="POST">
+    {%csrf_token%}
     <div class="row signupRow">
       <div class="col-3 left-side">
       </div>
@@ -42,8 +43,8 @@
             <label for="position">Position</label>
             <span class="text-danger small">*</span>
             <select class="form-select registerInput" name="position" id="position" value="position">
-              <option value="Male">Staff</option>
-              <option value="Female">Administrator</option>
+              <option value="staff">Staff</option>
+              <option value="administrator">Administrator</option>
             </select>
           </div>
         </div><br>
@@ -56,10 +57,18 @@
           </div>
         </div><br>
         <div class="col-12">
+          <label for="email">Phone</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group">
+            <input class="form-control registerInput" type="integer" name="phone" id="phone" value=""
+              placeholder="Enter your Phone">
+          </div>
+        </div><br>
+        <div class="col-12">
           <label for="password">New Password</label>
           <span class="text-danger small">*</span>
           <div class="form-group d-flex">
-            <input class="form-control registerInput" type="password" name="password" id="password"
+            <input class="form-control registerInput" type="password" name="password1" id="password"
               placeholder="Enter Your New Password">
             <div class="input-group-append eyeButton">
               <span class="input-group-text" onclick="new_password_show_hide();">
@@ -73,7 +82,7 @@
           <label for="confirmPassword">Confirm Password</label>
           <span class="text-danger small">*</span>
           <div class="form-group d-flex">
-            <input class="form-control registerInput" type="password" name="confirmPassword" id="confirmPassword"
+            <input class="form-control registerInput" type="password" name="password2" id="confirmPassword"
               placeholder="Confirm Your Password">
             <div class="input-group-append">
               <span class="input-group-text eyeButton" onclick="confirm_password_show_hide();">
@@ -88,7 +97,7 @@
         </div><br>
         <div class="col-12 d-flex justify-content-center">
           <p style="color: gray;">Already have an account?</p>&nbsp;
-          <a href="/login" class="loginLink">Login</a>
+          <a href="/login" class="loginLink text-secondary">Login</a>
         </div> <br>
       </div>
       <div class="col-3 right-side">

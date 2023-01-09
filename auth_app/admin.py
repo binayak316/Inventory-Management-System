@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import MyUser
+from .models import MyUser, OtpModel
 from .forms import MyUserForm
 # Register your models here.
 
@@ -18,3 +18,8 @@ class MyUserAdmin(UserAdmin):
 
 
 admin.site.register(MyUser, MyUserAdmin) 
+
+class OtpModelAdmin(admin.ModelAdmin):
+    list_display = ['id','otp' ,'myuser']
+
+admin.site.register(OtpModel,OtpModelAdmin)
