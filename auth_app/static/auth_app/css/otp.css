@@ -1,0 +1,35 @@
+body .otpContainer {
+    background-color: white;
+    width: 30%;
+    border-radius: 10px;
+    padding: 2%;
+    margin-top: 14%;
+    box-shadow: 2px 2px 2px gray;
+}
+
+.logoImage img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div .submitOtp {
+    background: #FF7A00;
+    width: 100%;
+    color: white;
+    font-weight: bold;
+    margin: 1rem 0 1rem 0;
+
+}
+
+div .goBack {
+    margin: 1rem 0 1rem 0;
+    width: 100%;
+
+}
+
+div .submitOtp:hover {
+    background: #e37207;
+    color: white;
+    font-weight: bold;
+}

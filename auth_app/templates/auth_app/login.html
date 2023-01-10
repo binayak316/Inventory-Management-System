@@ -4,23 +4,23 @@
 {% block content %}
 <div class="container loginContainer">
   <div class="row">
-    
+
     <form action="" method="POST">
       {% csrf_token %}
       <div class="col-md-12 logoImageLogin">
         <img src="{% static '/images/logo.png' %}" alt="">
-        
+
       </div>
       {% for message in messages %}
-          {{message}}
-        {% endfor %}
-      
-      
+      {{message}}
+      {% endfor %}
+
+
       <div class="col-md-12 login_heading">
         <p class="form-text">login to Hamro Khata</p>
-        
-        
-        
+
+
+
       </div>
       <div class="col-md-12">
         <label for="email" class="form-label">Email</label>
@@ -31,7 +31,7 @@
         <div class="passwordRow d-flex">
           <input type="password" class="form-control" name="password2" id="password" placeholder="Enter your password">
           <div class="input-group-append">
-            <span class="input-group-text" onclick="password_show_hide();">
+            <span class="input-group-text loginEye" onclick="password_show_hide();">
               <i class="fa-solid fa-eye" id="show_eye"></i>
               <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
             </span>
@@ -46,8 +46,8 @@
       </div>
 
       <div class="text-center registerUser text-secondary">
-        <p >Don't have account?</p> &nbsp;
-        <a href="/register" class="text-secondary" >Sign Up</a>
+        <p>Don't have account?</p> &nbsp;
+        <a href="/register" class="text-secondary">Sign Up</a>
       </div>
     </form>
   </div>
