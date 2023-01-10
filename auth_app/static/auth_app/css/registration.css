@@ -1,0 +1,56 @@
+.signupRow {
+    width: 85%;
+}
+
+.registerInput {
+    height: 30px;
+    font-size: small !important;
+}
+
+.center-form {
+    border: 1px solid black;
+}
+
+.centralpart {
+    border-radius: 10px;
+    background: white !important;
+    box-shadow: 2px 2px 2px gray;
+    margin-left: 14%;
+}
+
+.logoImage img {
+    height: 80px;
+    margin-left: 15%;
+    margin-bottom: -4%;
+}
+
+.logoImage {
+    background-color: #d9d9d9;
+}
+
+.loginLink {
+    text-decoration: none;
+}
+
+.loginLink:hover {
+    text-decoration: underline;
+}
+
+.input-group-append span {
+    margin-left: -40px;
+    background: transparent;
+    border: none;
+}
+
+.submitButton button {
+    width: 100%;
+    background-color: #FF7A00;
+    color: white;
+    font-weight: bold;
+}
+
+.submitButton button:hover {
+    background-color: hsl(29, 84%, 47%);
+    color: white;
+    font-weight: bold;
+}

@@ -1,0 +1,147 @@
+{% extends 'auth_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4 signupForm">
+  <form action="" method="POST">
+    {%csrf_token%}
+    <div class="row signupRow">
+      <div class="col-3 left-side">
+      </div>
+      <div class="col-6 centralpart">
+        <div class="col-12 mt-2 logoImage">
+          <img src="{% static '/images/logo.png' %}" alt="App Logo">
+        </div>
+        <div class="d-flex mt-4">
+          <div class="col-6">
+            <label for="firstname">Firstname</label>
+            <span class="text-danger small">*</span>
+            <div class="form-group">
+              <input class="form-control registerInput" type="text" name="firstname" id="firstname" value=""
+                placeholder="Enter your first name">
+            </div>
+          </div> &nbsp;
+          <div class="col-6">
+            <label for="lastname">Lastname</label>
+            <span class="text-danger small">*</span>
+            <div class="form-group">
+              <input class="form-control registerInput" type="text" name="lastname" id="lastname" value=""
+                placeholder="Enter your last name">
+            </div>
+          </div>
+        </div><br>
+        <div class="d-flex">
+          <div class="col-6">
+            <label for="username">Username</label>
+            <span class="text-danger small">*</span>
+            <div class="form-group">
+              <input class="form-control registerInput" type="username" name="username" id="username" value=""
+                placeholder="Enter your Username">
+            </div>
+          </div> &nbsp;
+          <div class="col-6">
+            <label for="position">Position</label>
+            <span class="text-danger small">*</span>
+            <select class="form-select registerInput" name="position" id="position" value="position">
+              <option value="staff">Staff</option>
+              <option value="administrator">Administrator</option>
+            </select>
+          </div>
+        </div><br>
+        <div class="col-12">
+          <label for="email">Email</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group">
+            <input class="form-control registerInput" type="email" name="email" id="email" value=""
+              placeholder="Enter your email">
+          </div>
+        </div><br>
+        <div class="col-12">
+          <label for="email">Phone</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group">
+            <input class="form-control registerInput" type="integer" name="phone" id="phone" value=""
+              placeholder="Enter your Phone">
+          </div>
+        </div><br>
+        <div class="col-12">
+          <label for="password">New Password</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group d-flex">
+            <input class="form-control registerInput" type="password" name="password1" id="password"
+              placeholder="Enter Your New Password">
+            <div class="input-group-append eyeButton">
+              <span class="input-group-text" onclick="new_password_show_hide();">
+                <i class="fa-solid fa-eye" id="show_eye"></i>
+                <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
+              </span>
+            </div>
+          </div>
+        </div> <br>
+        <div class="col-12">
+          <label for="confirmPassword">Confirm Password</label>
+          <span class="text-danger small">*</span>
+          <div class="form-group d-flex">
+            <input class="form-control registerInput" type="password" name="password2" id="confirmPassword"
+              placeholder="Confirm Your Password">
+            <div class="input-group-append">
+              <span class="input-group-text eyeButton" onclick="confirm_password_show_hide();">
+                <i class="fa-solid fa-eye" id="confirm_show_eye"></i>
+                <i class="fas fa-eye-slash d-none" id="confirm_hide_eye"></i>
+              </span>
+            </div>
+          </div>
+        </div> <br>
+        <div class="col-12 text-center submitButton">
+          <button class="btn btn">Sign up</button>
+        </div><br>
+        <div class="col-12 d-flex justify-content-center">
+          <p style="color: gray;">Already have an account?</p>&nbsp;
+          <a href="/login" class="loginLink text-secondary">Login</a>
+        </div> <br>
+      </div>
+      <div class="col-3 right-side">
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<script>
+  // New Password show/hide eye button
+  function new_password_show_hide() {
+    var x = document.getElementById("password");
+    var show_eye = document.getElementById("show_eye");
+    var hide_eye = document.getElementById("hide_eye");
+    hide_eye.classList.remove("d-none");
+    if (x.type === "password") {
+      x.type = "text";
+      show_eye.style.display = "none";
+      hide_eye.style.display = "block";
+    } else {
+      x.type = "password";
+      show_eye.style.display = "block";
+      hide_eye.style.display = "none";
+    }
+  }
+
+
+  // Confirm Password show/hide eye button
+  function confirm_password_show_hide() {
+    var x = document.getElementById("confirmPassword");
+    var show_eye = document.getElementById("confirm_show_eye");
+    var hide_eye = document.getElementById("confirm_hide_eye");
+    hide_eye.classList.remove("d-none");
+    if (x.type === "password") {
+      x.type = "text";
+      show_eye.style.display = "none";
+      hide_eye.style.display = "block";
+    } else {
+      x.type = "password";
+      show_eye.style.display = "block";
+      hide_eye.style.display = "none";
+    }
+  }
+</script>
+
+{% endblock %}
