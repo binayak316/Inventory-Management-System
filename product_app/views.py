@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
@@ -12,7 +13,9 @@ from .models import Product, Category
 # Create your views here.
 
 
-class CategoryAPI(APIView):
+class CategoryAPI(GenericAPIView):
+    serializer_class = CategorySerializer
+
     def get(self,request,pk=None,format=None):
         id= pk
         if id is not None:
@@ -32,8 +35,9 @@ class CategoryAPI(APIView):
 
 
 
-class ProductAPI(APIView):
-
+class ProductAPI(GenericAPIView):
+    serializer_class = ProductSerializer
+    
     def get(self,request,pk=None,format=None):
         id = pk
         if id is not None:

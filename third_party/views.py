@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from .serializers import VendorSerializer, CustomerSerializer
 from .models import Vendor, Customer
@@ -9,7 +9,9 @@ from .models import Vendor, Customer
 
 
 
-class VendorAPI(APIView):
+class VendorAPI(GenericAPIView):
+    serializer_class = VendorSerializer
+
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
@@ -28,7 +30,8 @@ class VendorAPI(APIView):
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
             
 
-class CustomerAPI(APIView):
+class CustomerAPI(GenericAPIView):
+    serializer_class = CustomerSerializer
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:

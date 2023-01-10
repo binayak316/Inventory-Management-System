@@ -2,13 +2,15 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.generics import GenericAPIView
 from .serializers import SalesItemSerializer, SalesSerializer
 from .models import SalesItem, Sales
 
 # Create your views here.
 
-class SalesAPI(APIView):
+class SalesAPI(GenericAPIView):
+    serializer_class = SalesSerializer
+
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
@@ -27,7 +29,9 @@ class SalesAPI(APIView):
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
 
-class SalesItemAPI(APIView):
+class SalesItemAPI(GenericAPIView):
+    serializer_class = SalesItemSerializer
+    
     def get(self,request,pk=None,format=None):
         id = pk
         if id is not None:

@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     'purchase_app',
     'sales_app',
     'auth_app',
-    'rest_framework'
-    
+    'rest_framework',
+    'drf_yasg',    
 ]
 
 JAZZMIN_SETTINGS = {

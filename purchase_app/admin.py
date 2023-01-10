@@ -18,7 +18,16 @@ class PurchaseItemInline(admin.TabularInline):
 
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ['id','grand_total','sub_total','discount_amount','tax_amount', 'status']
+    list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items', 'status']
     inlines = [PurchaseItemInline]
+
+    def items(self, obj):
+        purchase_items = PurchaseItem.objects.filter(purchase=obj.id)
+        value = ""
+        for item in purchase_items:
+            data = "Products : %s \n\t Quantity : %s " % (item.product.name , item.quantity)
+            value += data
+            # value += f'{item.product.name} {item.quantity}'
+        return value
 
 admin.site.register(Purchase,PurchaseAdmin)

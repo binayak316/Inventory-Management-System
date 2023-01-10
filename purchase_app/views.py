@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+
 from rest_framework import status
 from .serializers import PurchaseSerializer,PurchaseItemSerializer
 from .models import Purchase, PurchaseItem
@@ -8,7 +10,8 @@ from .models import Purchase, PurchaseItem
 # Create your views here.
 
 
-class PurchaseAPI(APIView):
+class PurchaseAPI(GenericAPIView):
+    serializer_class = PurchaseSerializer
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
@@ -26,7 +29,8 @@ class PurchaseAPI(APIView):
             return Response({'msg':'Purchase is created'}, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
-class PurchaseItemAPI(APIView):
+class PurchaseItemAPI(GenericAPIView):
+    serializer_class = PurchaseItemSerializer
     def get(self,request,pk=None,format=None):
         id = pk
         if id is not None:
