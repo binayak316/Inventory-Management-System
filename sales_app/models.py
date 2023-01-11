@@ -10,7 +10,7 @@ class Sales(models.Model):
         ('Completed','Completed'),
         ('Failed','Failed'),
     )
-
+# customer lai sell garinxa so foreign key
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL , null=True)
 
     grand_total = models.FloatField()
@@ -31,11 +31,13 @@ class Sales(models.Model):
     def __str__(self):
         return str(self.customer) + str(self.id)
 
+    
+
 class SalesItem(models.Model):
     sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
-    total = models.FloatField() #this is the total amount which is calculated by product price * quantity
+    total = models.FloatField(blank=True, null=True) #this is the total amount which is calculated by product price * quantity
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -45,3 +47,7 @@ class SalesItem(models.Model):
 
     def __str__(self):
         return str(self.quantity)
+
+    def save(self, *args, **kwargs):
+        self.total = float(self.product.price) * int(self.quantity)
+        super().save()
