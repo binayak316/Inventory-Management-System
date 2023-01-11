@@ -10,7 +10,7 @@ from .models import SalesItem, Sales
 
 class SalesAPI(GenericAPIView):
     serializer_class = SalesSerializer
-
+    queryset = Sales.objects.all
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
@@ -31,6 +31,7 @@ class SalesAPI(GenericAPIView):
 
 class SalesItemAPI(GenericAPIView):
     serializer_class = SalesItemSerializer
+    queryset = SalesItem.objects.all()
     
     def get(self,request,pk=None,format=None):
         id = pk

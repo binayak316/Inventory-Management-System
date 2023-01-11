@@ -156,14 +156,16 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
-        "product_app.Product":"		fas fa-archive",
-        "product_app.category":"fab fa-cuttlefish",
+        "product_app.Product":"		fas fa-dice-d6",
+        "product_app.category":"fas fa-cubes ",
         "purchase_app.purchaseItem":"	fas fa-cart-arrow-down",
         "purchase_app.purchase":"	fab fa-pinterest-p",
-        "sales_app.salesItem":"fab fa-get-pocket",
+        "sales_app.salesItem":"	fa fa-share-square",
         "sales_app.sales":"fab fa-stripe-s",
         "third_party.customer":"fas fa-user-friends",
-        "third_party.vendor":"	fas fa-user-cog"
+        "third_party.vendor":"	fas fa-user-cog",
+        "auth_app.OtpModel":"far fa-clock",
+        "auth_app.MyUser":"	fas fa-user-alt",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -199,6 +201,7 @@ JAZZMIN_SETTINGS = {
         "auth.user": "collapsible",
         "auth.group": "vertical_tabs",
         "purchase_app.purchase" : "collapsible",
+        "sales_app.sales":"collapsible",
          
          },
     # Add a language dropdown into the admin

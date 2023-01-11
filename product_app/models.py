@@ -35,6 +35,6 @@ class Product(models.Model):
         ordering = ('created_at',)
 
     def __str__(self):
-        return self.name +" " + self.sku
+        return self.name +" " + str(f"sku:{self.sku}") 
 
 
