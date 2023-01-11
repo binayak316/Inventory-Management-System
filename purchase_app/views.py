@@ -12,6 +12,8 @@ from .models import Purchase, PurchaseItem
 
 class PurchaseAPI(GenericAPIView):
     serializer_class = PurchaseSerializer
+    queryset = Purchase.objects.all()
+
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
@@ -31,6 +33,8 @@ class PurchaseAPI(GenericAPIView):
 
 class PurchaseItemAPI(GenericAPIView):
     serializer_class = PurchaseItemSerializer
+    queryset = PurchaseItem.objects.all()
+    
     def get(self,request,pk=None,format=None):
         id = pk
         if id is not None:

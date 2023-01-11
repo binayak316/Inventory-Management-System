@@ -32,6 +32,8 @@ class VendorAPI(GenericAPIView):
 
 class CustomerAPI(GenericAPIView):
     serializer_class = CustomerSerializer
+    queryset = Customer.objects.all()
+    
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
