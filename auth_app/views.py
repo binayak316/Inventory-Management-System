@@ -36,7 +36,6 @@ def send_mail(otp, reciever_email): # send mail le kk linxa (otp ra receiver mal
     email.send()
 
     # print(email)
-@login_required
 def check_otp(request, user_id):
     if not  request.user.is_authenticated:
         if request.method == "POST":
