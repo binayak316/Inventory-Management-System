@@ -36,78 +36,88 @@ def send_mail(otp, reciever_email): # send mail le kk linxa (otp ra receiver mal
     email.send()
 
     # print(email)
-
+@login_required
 def check_otp(request, user_id):
-    if request.method == "POST":
-        user = MyUser.objects.get(id=user_id)
-        user_otp = request.POST["otp"]
-        # print(user, user_otp)
-        otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first()
-        print(otp.otp, user_otp)
-        if otp:
-            if str(user_otp) == str(otp.otp):
-                return redirect('/login/')
+    if not  request.user.is_authenticated:
+        if request.method == "POST":
+            user = MyUser.objects.get(id=user_id)
+            user_otp = request.POST["otp"]
+            # print(user, user_otp)
+            otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first()
+            print(otp.otp, user_otp)
+            if otp:
+                if str(user_otp) == str(otp.otp):
+                    return redirect('/login/')
+                else:
+                    messages.error(request, "Invalid OTP")
             else:
-                messages.error(request, "Invalid OTP")
-        else:
-            messages.error(request, 'OTP is expired')
+                messages.error(request, 'OTP is expired')
 
-    return render(request, 'auth_app/check_otp.html')
+        return render(request, 'auth_app/check_otp.html')
+    else:
+        return HttpResponseRedirect('/dashboard')
      
 
 def register_page(request):
-    if request.method == "POST":
-        register_form  = MyUserForm(request.POST)
-        if register_form.is_valid():
-            user = register_form.save()
-            #this two down line save the otp to the otpmodel
-            otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
-            otp.save()
-            send_mail(otp.otp, user.email)# paxillo otp is the otp retrived from db
-            return redirect(f'/check_otp/{user.id}')
+    if not request.user.is_authenticated:
+        if request.method == "POST":
+            register_form  = MyUserForm(request.POST)
+            if register_form.is_valid():
+                user = register_form.save()
+                #this two down line save the otp to the otpmodel
+                otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
+                otp.save()
+                send_mail(otp.otp, user.email)# paxillo otp is the otp retrived from db
+                return redirect(f'/check_otp/{user.id}')
+            else:
+                print(register_form.errors)
         else:
-            print(register_form.errors)
+            
+            register_form = MyUserForm()
     else:
-        
-        register_form = MyUserForm()
+        return HttpResponseRedirect('/dashboard')
 
-        
+            
     context = {
         'register_form':register_form,
     }
     return render(request, 'auth_app/registration.html', context)
+    
 
 def login_page(request):
-    if request.method == "POST":
-        email = request.POST['email']
-        # print(request.POST)
-        # username = request.POST['username']
-        password = request.POST['password2']
+    if not request.user.is_authenticated:
+        if request.method == "POST":
+            email = request.POST['email']
+            # print(request.POST)
+            # username = request.POST['username']
+            password = request.POST['password2']
 
-        if email and password:
-            # username = MyUser.objects.get(email=email).username
-            users = MyUser.objects.filter(email=email) #yo agadi ko email MyUser ko models ko object ho  ra paxadi ko email chai mathi ko attribute ho
-            # print(users)
-            if users: 
-                username = users[0].username # filter query ko suru ko 0th index ko username vaneko ho esle
-                user = authenticate(username = username, password=password)
-                if user is not None:
-                    if not user.is_staff:
-                        messages.error(request, "You are not authorized to  staff!!!")
-                        return redirect('/login')
-                    login(request,user)
-                    return redirect('/dashboard')
+            if email and password:
+                # username = MyUser.objects.get(email=email).username
+                users = MyUser.objects.filter(email=email) #yo agadi ko email MyUser ko models ko object ho  ra paxadi ko email chai mathi ko attribute ho
+                # print(users)
+                if users: 
+                    username = users[0].username # filter query ko suru ko 0th index ko username vaneko ho esle
+                    user = authenticate(username = username, password=password)
+                    if user is not None:
+                        if not user.is_staff:
+                            messages.error(request, "You are not authorized to  staff!!!")
+                            return redirect('/login')
+                        login(request,user)
+                        return redirect('/dashboard')
+                    else:
+                        messages.error(request, 'Email and Password are incorrect')
                 else:
-                    messages.error(request, 'Email and Password are incorrect')
+                    messages.error(request, "Email is not registered")
+
             else:
-                messages.error(request, "Email is not registered")
+                messages.error(request, "Fill the fields")
 
-        else:
-            messages.error(request, "Fill the fields")
+        return render(request, 'auth_app/login.html')
+    else:
+        return HttpResponseRedirect('/dashboard')
 
-    return render(request, 'auth_app/login.html')
-
-
+@login_required
 def logout_page(request):
     logout(request)
     return redirect('login-page')
