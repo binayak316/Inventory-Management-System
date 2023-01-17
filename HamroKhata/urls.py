@@ -40,12 +40,13 @@ schema_view = get_schema_view(
 # swagger docs ends
 
 urlpatterns = [
-    path('dashboard/', admin.site.urls),
+    
     path('',include('product_app.urls')),
     path('', include('third_party.urls')),
     path('', include('purchase_app.urls')),
     path('',include('sales_app.urls')),
     path('',include('auth_app.urls')),
+    path('', admin.site.urls),
 
     path('apidocs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
