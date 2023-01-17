@@ -15,6 +15,7 @@ from .models import Product, Category
 
 class CategoryAPI(GenericAPIView):
     serializer_class = CategorySerializer
+    queryset = Category.objects.all
 
     def get(self,request,pk=None,format=None):
         id= pk
@@ -37,7 +38,8 @@ class CategoryAPI(GenericAPIView):
 
 class ProductAPI(GenericAPIView):
     serializer_class = ProductSerializer
-    
+    queryset = Product.objects.all
+
     def get(self,request,pk=None,format=None):
         id = pk
         if id is not None:

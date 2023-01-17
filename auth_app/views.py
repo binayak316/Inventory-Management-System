@@ -58,7 +58,7 @@ def check_otp(request, user_id):
 
         return render(request, 'auth_app/check_otp.html')
     else:
-        return HttpResponseRedirect('/dashboard')
+        return HttpResponseRedirect('/')
      
 
 def register_page(request):
@@ -78,7 +78,7 @@ def register_page(request):
             
             register_form = MyUserForm()
     else:
-        return HttpResponseRedirect('/dashboard')
+        return HttpResponseRedirect('/')
 
             
     context = {
@@ -107,7 +107,7 @@ def login_page(request):
                             messages.error(request, "You are not authorized to  staff!!!")
                             return redirect('/login')
                         login(request,user)
-                        return redirect('/dashboard')
+                        return redirect('/')
                     else:
                         messages.error(request, 'Email and Password are incorrect')
                 else:
@@ -118,7 +118,10 @@ def login_page(request):
 
         return render(request, 'auth_app/login.html')
     else:
-        return HttpResponseRedirect('/dashboard')
+        return HttpResponseRedirect('/')
+
+def index(request):
+    return render(request, 'auth_app/index.html')
 
 @login_required
 def logout_page(request):
