@@ -14,7 +14,7 @@ class MyUser(AbstractUser):
     position = models.CharField(max_length=15,choices=POSITION_CHOICES)
 
     def __str__(self):
-        return self.username
+        return self.email
 
 
 class OtpModel(models.Model):

@@ -12,7 +12,7 @@ class SalesItemInline(admin.TabularInline):
 
 class SalesAdmin(admin.ModelAdmin):
     list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items','customer', 'status']
-    inlines = [SalesItemInline]
+    # inlines = [SalesItemInline]
 
     def items(self, obj):
         sales_item = SalesItem.objects.filter(sales=obj.id)

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'sales_app',
     'auth_app',
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_yasg',    
 ]
 
@@ -345,9 +346,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    # 'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS':
-    True,  #rotate_refresh_tokens lai false banaune vane (access + refresh) dubai tokens painxa
+    'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS':True,  #rotate_refresh_tokens lai false banaune vane (access + refresh) dubai tokens painxa
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 
@@ -360,3 +379,9 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'hamrokhata.ims@gmail.com'
 EMAIL_HOST_PASSWORD = 'sugopyinfxmtorlk'
+
+
+
+AUTH_USER_MODEL = 'auth_app.MyUser'
+
+REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER':'auth_app.serializers.UserRegistrationSerializer' }

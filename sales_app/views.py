@@ -25,8 +25,26 @@ class SalesAPI(GenericAPIView):
         serializer = SalesSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
+            sales = Sales.objects.get(id=serializer.data['id'])
+            sales.sub_total = 0
+            
+            sales.discount_amount = (sales.disc_percent /100) * sales.get_subtotal()
+            sales.tax_amount = float(float(sales.tax_percent)/100) * float(sales.get_subtotal()- sales.discount_amount)
+
+            sales.sub_total = sales.get_subtotal()
+
+            sales.grand_total = sales.get_grandtotal()
+
+            sales.save()
+
+            serializer = SalesSerializer(Sales)
+            
             return Response({'msg':'Sales is created'}, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        
+
+    
+
 
 
 class SalesItemAPI(GenericAPIView):

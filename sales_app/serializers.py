@@ -1,12 +1,18 @@
 from rest_framework import serializers
 from .models import Sales, SalesItem
 
-class SalesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Sales
-        fields = '__all__'
+from drf_writable_nested import WritableNestedModelSerializer
+
+
 
 class SalesItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = SalesItem
         fields = '__all__'
+
+class SalesSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
+    sales_items = SalesItemSerializer(many=True)
+    class Meta:
+        model = Sales
+        fields = '__all__'
+

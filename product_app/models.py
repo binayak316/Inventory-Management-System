@@ -21,7 +21,8 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
-    price = models.FloatField()
+    purchase_price = models.FloatField()
+    selling_price = models.FloatField()
     type = models.CharField(max_length=50)
     sku = models.CharField(unique=True, max_length=50)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
