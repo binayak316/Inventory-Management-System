@@ -1,8 +1,30 @@
 from django.db import models
 from product_app.models import Product
 from third_party.models import Customer
+
+from django.shortcuts import reverse
 # Create your models here.
 
+
+
+class SalesItem(models.Model):
+    # sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    quantity = models.IntegerField()
+    total = models.FloatField(blank=True, null=True) #this is the total amount which is calculated by product price * quantity
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('created_at',)  
+
+    def __str__(self):
+        return str(self.quantity)
+
+    def save(self, *args, **kwargs):
+        self.total = float(self.product.selling_price) * int(self.quantity) 
+        super().save()  
 
 class Sales(models.Model):
     STATUS_CHOICES = (
@@ -12,6 +34,7 @@ class Sales(models.Model):
     )
 # customer lai sell garinxa so foreign key
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL , null=True)
+    sales_items = models.ManyToManyField(SalesItem)
 
     grand_total = models.FloatField(null=True, blank=True)
     sub_total = models.FloatField( null=True, blank=True)
@@ -39,24 +62,7 @@ class Sales(models.Model):
                 total += item.total
             return float(total)
         return total
-        
-
-    def get_salesitem(self):
-        sales_items = SalesItem.objects.filter(sales=self.id)
-        return sales_items
-        
-
-    # def save(self, *args, **kwargs):
-
-    #     self.discount_amount = (self.disc_percent /100) * self.get_subtotal()
-
-    #     self.tax_amount = float(float(self.tax_percent)/100) * float(self.get_subtotal()-self.discount_amount)
-
-    #     self.grand_total = float(self.sub_total) - float(self.discount_amount) + float(self.tax_amount)
-    #     super().save()
-
-
-
+    
     def get_grandtotal(self, *args, **kwargs):
 
         discount_amount = (self.disc_percent /100) * self.get_subtotal()
@@ -67,23 +73,12 @@ class Sales(models.Model):
         
         return grand_total
 
+        
+
+    def get_salesitem(self):
+        sales_items = SalesItem.objects.filter(sales=self.id)
+        return sales_items
+
+    
 
 
-class SalesItem(models.Model):
-    sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
-    quantity = models.IntegerField()
-    total = models.FloatField(blank=True, null=True) #this is the total amount which is calculated by product price * quantity
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('created_at',)  
-
-    def __str__(self):
-        return str(self.quantity)
-
-    def save(self, *args, **kwargs):
-        self.total = float(self.product.price) * int(self.quantity) 
-        super().save()  

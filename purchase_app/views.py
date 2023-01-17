@@ -28,6 +28,17 @@ class PurchaseAPI(GenericAPIView):
         serializer = PurchaseSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
+            purchase = Purchase.objects.get(id=serializer.data['id'])
+            purchase.sub_total = 0
+
+            purchase.discount_amount = (purchase.disc_percent/100) * purchase.get_subtotal()
+            purchase.tax_amount = float(float(purchase.tax_percent)/100 * float(purchase.get_subtotal() - purchase.discount_amount))
+
+            purchase.sub_total = purchase.get_subtotal()
+            purchase.grand_total = purchase.get_grandtotal()
+            purchase.save()
+            serializer = PurchaseSerializer(Purchase)
+            
             return Response({'msg':'Purchase is created'}, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 

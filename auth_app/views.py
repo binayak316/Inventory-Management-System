@@ -10,6 +10,10 @@ from .models import OtpModel
 from datetime import datetime
 from django.conf import settings
 from django.core.mail import EmailMessage
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+# from .serializers import UserRegistrationSerializer
 
 
 from django.contrib.auth.decorators import login_required
@@ -122,7 +126,15 @@ def logout_page(request):
     return redirect('login-page')
 
 
+# auth_app api's
 
 
 
-
+# class UserRegistrationApi(APIView):
+#     def post(self, request, format=None)-> Response:
+#         serializer = UserRegistrationSerializer(data = request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             serializer.save()
+#             # user.save()
+#             return Response ({'msg':'registration success'}, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

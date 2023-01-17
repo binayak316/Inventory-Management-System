@@ -20,7 +20,7 @@ class PurchaseItemInline(admin.TabularInline):
 
 class PurchaseAdmin(admin.ModelAdmin):
     list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items','vendor', 'status']
-    inlines = [PurchaseItemInline]
+    # inlines = [PurchaseItemInline]
 
     def items(self, obj):
         purchase_items = PurchaseItem.objects.filter(purchase=obj.id)
