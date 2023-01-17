@@ -38,4 +38,10 @@ class Product(models.Model):
     def __str__(self):
         return self.name +" " + str(f"sku:{self.sku}") 
 
+    def add_stock(self, quantity :int ):
+        self.current_stock += quantity
+    
+    def sub_stock(self, quantity :int ):
+        self.current_stock -= quantity
+
 

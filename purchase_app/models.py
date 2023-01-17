@@ -21,6 +21,9 @@ class PurchaseItem(models.Model):
     
     def save(self, *args, **kwargs):
         self.total = float(self.product.purchase_price) * int(self.quantity)
+        product = Product.objects.get(id=self.product.id)
+        product.sub_stock(self.quantity)
+        product.save()
         super().save()
     
 
