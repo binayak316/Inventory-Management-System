@@ -38,18 +38,21 @@ schema_view = get_schema_view(
    permission_classes=[permissions.AllowAny],
 )
 # swagger docs ends
-
 urlpatterns = [
-    
+
+]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    path('dashboard/', admin.site.urls),
     path('',include('product_app.urls')),
     path('', include('third_party.urls')),
     path('', include('purchase_app.urls')),
     path('',include('sales_app.urls')),
     path('',include('auth_app.urls')),
-    path('', admin.site.urls),
+    
 
     path('apidocs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
 
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -121,7 +121,10 @@ def login_page(request):
         return HttpResponseRedirect('/')
 
 def index(request):
-    return render(request, 'auth_app/index.html')
+    if request.user.is_authenticated:
+        return redirect("/dashboard")
+    else:
+        return redirect("/login/")
 
 @login_required
 def logout_page(request):

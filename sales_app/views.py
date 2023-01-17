@@ -26,6 +26,7 @@ class SalesAPI(GenericAPIView):
         if serializer.is_valid():
             serializer.save()
             sales = Sales.objects.get(id=serializer.data['id'])
+            
             sales.sub_total = 0
             
             sales.discount_amount = (sales.disc_percent /100) * sales.get_subtotal()

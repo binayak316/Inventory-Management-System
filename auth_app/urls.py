@@ -3,6 +3,7 @@ from auth_app import views
 # from auth_app.views import UserRegistrationApi
 
 urlpatterns = [
+    path('', views.index, name="index"),
     path('register/', views.register_page, name="register-page"),
     path('login/',views.login_page, name="login-page"),
     path('logout-user/', views.logout_page, name='logout-page'),
