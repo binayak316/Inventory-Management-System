@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from .serializers import SalesItemSerializer, SalesSerializer
 from .models import SalesItem, Sales
+from product_app.models import Product
 
 # Create your views here.
 
@@ -23,6 +24,25 @@ class SalesAPI(GenericAPIView):
 
     def post(self, request ,*args, **kwargs):
         serializer = SalesSerializer(data = request.data)
+
+        out_of_stock_products = []
+        # print(request.data['sales_items'], type(request.data)) sales items list ma xa so we can do loop in sales_items
+        for item in request.data['sales_items']: 
+            product = Product.objects.get(id=int(item['product'])) #sales items is list but the data inside list are quantity and product which are dictionaries so we can access the value of dictionary by ['name']
+            if product.current_stock < int(item['quantity']):
+                out_of_stock_products.append(product.name)
+
+                # return Response({
+                #      "msg" : f"{product.name} is out of stock"
+                # })
+        if len(out_of_stock_products) > 0:
+            return Response(
+                {
+                    "msg" : f"[{','.join(out_of_stock_products)} ]Products are out of stocks."
+                }
+            )
+
+
         if serializer.is_valid():
             serializer.save()
             sales = Sales.objects.get(id=serializer.data['id'])
