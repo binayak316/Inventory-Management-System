@@ -8,13 +8,15 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from .serializers import ProductSerializer, CategorySerializer
 from .models import Product, Category
-
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
 
 # Create your views here.
 
 
-class CategoryAPI(GenericAPIView):
+class CategoryAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
     serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
     queryset = Category.objects.all
 
     def get(self,request,pk=None,format=None):
@@ -36,8 +38,9 @@ class CategoryAPI(GenericAPIView):
 
 
 
-class ProductAPI(GenericAPIView):
+class ProductAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
     queryset = Product.objects.all
 
     def get(self,request,pk=None,format=None):

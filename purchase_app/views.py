@@ -6,12 +6,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import PurchaseSerializer,PurchaseItemSerializer
 from .models import Purchase, PurchaseItem
+from rest_framework.permissions import IsAuthenticated
 #import permission mixins
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
 # Create your views here.
 
 
-class PurchaseAPI(GenericAPIView):
+class PurchaseAPI(GenericAPIView, PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin):
     serializer_class = PurchaseSerializer
+    permission_classes = [IsAuthenticated]
     queryset = Purchase.objects.all()
 
     def get(self, request, pk=None, format=None):
@@ -42,8 +45,9 @@ class PurchaseAPI(GenericAPIView):
             return Response({'msg':'Purchase is created'}, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
-class PurchaseItemAPI(GenericAPIView):
+class PurchaseItemAPI(GenericAPIView, PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin):
     serializer_class = PurchaseItemSerializer
+    permission_classes = [IsAuthenticated]
     queryset = PurchaseItem.objects.all()
     
     def get(self,request,pk=None,format=None):
