@@ -13,15 +13,19 @@ from django.core.mail import EmailMessage
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-# from .serializers import UserRegistrationSerializer
 
+from .serializers import UserRegistrationSerializer, UserLoginSerializer
+from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth.decorators import login_required
+from rest_framework_simplejwt.tokens import RefreshToken
 # Create your views here.
 
 
+
+
 def otp_generate():
-    digits = "0123456789"
+    digits = "123456789"
     otp = ""
 
     for i in range(6):
@@ -47,7 +51,7 @@ def check_otp(request, user_id):
             user_otp = request.POST["otp"]
             # print(user, user_otp)
             otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first()
-            print(otp.otp, user_otp)
+            # print(otp.otp, user_otp)
             if otp:
                 if str(user_otp) == str(otp.otp):
                     return redirect('/login/')
@@ -97,7 +101,7 @@ def login_page(request):
 
             if email and password:
                 # username = MyUser.objects.get(email=email).username
-                users = MyUser.objects.filter(email=email) #yo agadi ko email MyUser ko models ko object ho  ra paxadi ko email chai mathi ko attribute ho
+                users = MyUser.objects.filter(email=email) #yo agadi ko email MyUse r ko models ko object ho  ra paxadi ko email chai mathi ko attribute ho
                 # print(users)
                 if users: 
                     username = users[0].username # filter query ko suru ko 0th index ko username vaneko ho esle
@@ -136,11 +140,52 @@ def logout_page(request):
 
 
 
-# class UserRegistrationApi(APIView):
-#     def post(self, request, format=None)-> Response:
-#         serializer = UserRegistrationSerializer(data = request.data)
-#         if serializer.is_valid(raise_exception=True):
-#             serializer.save()
-#             # user.save()
-#             return Response ({'msg':'registration success'}, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+#generate token manually
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+class UserRegistrationApi(APIView):
+    def post(self, request, format=None)-> Response:
+        serializer = UserRegistrationSerializer(data = request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            token = get_tokens_for_user(user)
+            # user.save()
+            return Response ({'token':token,'msg':'User Registration is success'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLoginApi(APIView):
+    def post(self, request, format=None):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email = serializer.data.get('email')
+            user = MyUser.objects.filter(email=email)
+            if user:
+                username = user[0].username
+            else:
+                return Response({
+                    'msg' : 'Email is not registered'
+                }) 
+            password = serializer.data.get('password')
+            # print(email, password)
+            user = authenticate(username=username, password=password)
+            # print(user)
+            if user is not None:
+                token = get_tokens_for_user(user)
+                return Response({'token':token,'user_id':user.id, 'msg':'Login successful'}, status= status.HTTP_200_OK)
+            else:
+                # return Response({'errors':'Email or Password is not valid'},status=status.HTTP_404_NOT_FOUND)
+                return Response({'errors':{'non_field_errors':['Email or Password is not valid']}},status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+# class CheckOtp(GenericAPIView):
+#     pass
