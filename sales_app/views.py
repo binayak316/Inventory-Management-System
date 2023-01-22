@@ -7,13 +7,10 @@ from .serializers import SalesItemSerializer, SalesSerializer
 from .models import SalesItem, Sales
 from product_app.models import Product
 
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
 # Create your views here.
 
-class SalesAPI(GenericAPIView, LoginRequiredMixin,PermissionRequiredMixin, UserPassesTestMixin):
+class SalesAPI(GenericAPIView):
     serializer_class = SalesSerializer
-    permission_classes = [IsAuthenticated]
     queryset = Sales.objects.all
     def get(self, request, pk=None, format=None):
         id = pk
@@ -71,9 +68,8 @@ class SalesAPI(GenericAPIView, LoginRequiredMixin,PermissionRequiredMixin, UserP
 
 
 
-class SalesItemAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
+class SalesItemAPI(GenericAPIView):
     serializer_class = SalesItemSerializer
-    permission_classes = [IsAuthenticated]
     queryset = SalesItem.objects.all()
     
     def get(self,request,pk=None,format=None):

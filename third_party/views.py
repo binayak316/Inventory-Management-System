@@ -6,16 +6,12 @@ from rest_framework import status
 from .serializers import VendorSerializer, CustomerSerializer
 from .models import Vendor, Customer
 
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
 # Create your views here.
 
 
 
-class VendorAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
+class VendorAPI(GenericAPIView):
     serializer_class = VendorSerializer
-
-    permission_classes = [IsAuthenticated]
 
     queryset = Vendor.objects.all()
     def get(self, request, pk=None, format=None):
@@ -36,9 +32,8 @@ class VendorAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, User
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
             
 
-class CustomerAPI(GenericAPIView, LoginRequiredMixin,PermissionRequiredMixin, UserPassesTestMixin, ):
+class CustomerAPI(GenericAPIView):
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated]
     queryset = Customer.objects.all()
     
     def get(self, request, pk=None, format=None):
