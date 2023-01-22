@@ -1,6 +1,6 @@
 from django.urls import path
 from auth_app import views
-from auth_app.views import UserRegistrationApi, UserLoginApi
+from auth_app.views import UserRegistrationApi, UserLoginApi, RefreshTokenApi
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -14,4 +14,7 @@ urlpatterns = [
     # auth_app api's
     path('api/register/', UserRegistrationApi.as_view(), name='register-api'),
     path('api/login/', UserLoginApi.as_view(), name='login-api'),
+
+    # refresh token api
+    # path('api/refreshtoken/', RefreshTokenApi.as_view(), name="refresh-token"),
 ]

@@ -19,6 +19,7 @@ from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 
 
@@ -140,12 +141,11 @@ def logout_page(request):
 
 # auth_app api's
 
-
-
-
 #generate token manually
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
+    if refresh is None:
+        return {'error': 'Refresh token not found'}
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
@@ -185,8 +185,17 @@ class UserLoginApi(APIView):
                 # return Response({'errors':'Email or Password is not valid'},status=status.HTTP_404_NOT_FOUND)
                 return Response({'errors':{'non_field_errors':['Email or Password is not valid']}},status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+    
+# class RefreshTokenApi(APIView):
+#     def post(self, request, *args, **kwargs):
+#         refresh_token = request.data.get('refresh') #this refresh value came from the token generation 
+#         try:
+#             user = RefreshToken.objects.get(token = refresh_token).user
+#         except:
+#             return Response ({'error':'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+#         new_tokens = get_tokens_for_user(user)
+#         return Response(new_tokens, status=status.HTTP_200_OK)
 
 
-# class CheckOtp(GenericAPIView):
-#     pass
+
