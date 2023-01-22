@@ -28,7 +28,7 @@ def otp_generate():
     digits = "123456789"
     otp = ""
 
-    for i in range(6):
+    for i in range(5):
         otp += digits[math.floor(random.random()*10)]
     return otp
 
@@ -69,7 +69,9 @@ def register_page(request):
     if not request.user.is_authenticated:
         if request.method == "POST":
             register_form  = MyUserForm(request.POST)
+            print(request.POST)
             if register_form.is_valid():
+                # print(register_form)
                 user = register_form.save()
                 #this two down line save the otp to the otpmodel
                 otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
@@ -144,7 +146,6 @@ def logout_page(request):
 #generate token manually
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
-
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
@@ -155,9 +156,9 @@ class UserRegistrationApi(APIView):
         serializer = UserRegistrationSerializer(data = request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            token = get_tokens_for_user(user)
+            # token = get_tokens_for_user(user)
             # user.save()
-            return Response ({'token':token,'msg':'User Registration is success'}, status=status.HTTP_201_CREATED)
+            return Response ({'msg':'User Registration is success'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
