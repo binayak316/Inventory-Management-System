@@ -31,6 +31,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 
+
 def otp_generate():
     digits = "123456789"
     otp = ""
@@ -163,7 +164,11 @@ class UserRegistrationApi(GenericAPIView):
         serializer = UserRegistrationSerializer(data = request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
+
             return Response ({'msg':'User Registration is successful'}, status=status.HTTP_201_CREATED)
+
+            return Response ({'token':token,'msg':'User Registration is success'}, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
