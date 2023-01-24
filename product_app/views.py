@@ -3,31 +3,43 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
+from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 
 from rest_framework import status
 from .serializers import ProductSerializer, CategorySerializer
 from .models import Product, Category
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly, AllowAny
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AccessMixin
 
+from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication, JWTStatelessUserAuthentication
+
+
+
+from product_app import views
 # Create your views here.
 
 
 class CategoryAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
-    queryset = Category.objects.all
+    queryset = Category.objects.all()
 
     def get(self,request,pk=None,format=None):
-        id= pk
-        if id is not None:
-            cat = Category.objects.get(id=id)
-            serializer = CategorySerializer(cat)
+        p = Permission.objects.filter(codename='view_category')[0]
+        user = request.user
+        if p in user.user_permissions.filter(pk=p.pk):
+            id= pk
+            if id is not None:
+                cat = Category.objects.get(id=id)
+                serializer = CategorySerializer(cat)
+                return Response(serializer.data)
+            cat = Category.objects.all()
+            serializer = CategorySerializer(cat, many=True)
             return Response(serializer.data)
-        cat = Category.objects.all()
-        serializer = CategorySerializer(cat, many=True)
-        return Response(serializer.data)
+        else:
+            return Response({'message':"You don't have permissions"})
 
     def post(self,request,*args,**kwargs):
         serializer = CategorySerializer(data = request.data)
@@ -37,28 +49,40 @@ class CategoryAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, Us
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
 
-
-class ProductAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
+class ProductAPI( GenericAPIView):
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = Product.objects.all
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [DjangoModelPermissions,IsAuthenticated ]
+    queryset = Product.objects.all()
+
 
     def get(self,request,pk=None,format=None):
-        id = pk
-        if id is not None:
-            prod = Product.objects.get(id=id)
-            serializer = ProductSerializer(prod)
+        p = Permission.objects.filter(codename='view_product')[0]
+        user = request.user
+        # print(p in user.user_permissions.all())
+
+        # if p in user.user_permissions.all():
+        if p in user.user_permissions.filter(pk=p.pk):
+            id = pk
+            if id is not None:
+                prod = Product.objects.get(id=id)
+                serializer = ProductSerializer(prod)
+                return Response(serializer.data)
+            prod = Product.objects.all()
+            serializer = ProductSerializer(prod, many=True)
             return Response(serializer.data)
-        prod = Product.objects.all()
-        serializer = ProductSerializer(prod, many=True)
-        return Response(serializer.data)
+        else:
+            return Response({
+                'message' : "You don't have permissions "
+            })
     
 
     def post(self, request, *args, **kwargs):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg':'Product is created'}, status = status.HTTP_201_CREATED)
+    
+            return Response({'message':'Product is created'}, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     

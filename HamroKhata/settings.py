@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',    
+    'rest_framework.authtoken',
 ]
 
 JAZZMIN_SETTINGS = {
@@ -348,26 +349,27 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME':timedelta(days=2),
     'ROTATE_REFRESH_TOKENS':True,  #rotate_refresh_tokens lai false banaune vane (access + refresh) dubai tokens painxa
+    'ALGORITHM' : 'HS256',
+    'AUTH_HEADER_TYPES': ('Bearer','JWT'),
+    # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    # 'USER_ID_FIELD': 'id',
+    # 'USER_ID_CLAIM': 'user_id',
+    # 'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+    # 'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    # 'TOKEN_TYPE_CLAIM': 'token_type',
+    # 'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
-
-    'JTI_CLAIM': 'jti',
+    # 'JTI_CLAIM': 'jti',
 
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.permissions.IsAuthenticated',
-    )
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    # )
 }
 
 
@@ -385,4 +387,4 @@ EMAIL_HOST_PASSWORD = 'sugopyinfxmtorlk'
 
 AUTH_USER_MODEL = 'auth_app.MyUser'
 
-REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER':'auth_app.serializers.UserRegistrationSerializer' }
+# REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER':'auth_app.serializers.UserRegistrationSerializer' }
