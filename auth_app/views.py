@@ -163,7 +163,7 @@ class UserRegistrationApi(GenericAPIView):
         serializer = UserRegistrationSerializer(data = request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            return Response ({'msg':'User Registration is successful'}, status=status.HTTP_201_CREATED)
+            return Response ({'msg':'User Registration is successful'}, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
