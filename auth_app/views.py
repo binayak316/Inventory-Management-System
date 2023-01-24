@@ -20,6 +20,12 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 
 
@@ -151,18 +157,18 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-class UserRegistrationApi(APIView):
+class UserRegistrationApi(GenericAPIView):
+    serializer_class = UserRegistrationSerializer
     def post(self, request, format=None)-> Response:
         serializer = UserRegistrationSerializer(data = request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            # token = get_tokens_for_user(user)
-            # user.save()
-            return Response ({'msg':'User Registration is success'}, status=status.HTTP_201_CREATED)
+            return Response ({'msg':'User Registration is successful'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserLoginApi(APIView):
+class UserLoginApi(GenericAPIView):
+    serializer_class = UserLoginSerializer
     def post(self, request, format=None):
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -185,17 +191,4 @@ class UserLoginApi(APIView):
                 # return Response({'errors':'Email or Password is not valid'},status=status.HTTP_404_NOT_FOUND)
                 return Response({'errors':{'non_field_errors':['Email or Password is not valid']}},status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-# class RefreshTokenApi(APIView):
-#     def post(self, request, *args, **kwargs):
-#         refresh_token = request.data.get('refresh') #this refresh value came from the token generation 
-#         try:
-#             user = RefreshToken.objects.get(token = refresh_token).user
-#         except:
-#             return Response ({'error':'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
-            
-#         new_tokens = get_tokens_for_user(user)
-#         return Response(new_tokens, status=status.HTTP_200_OK)
-
-
 

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Product, Category
+from django.contrib.auth.models import Permission
 # Register your models here.
 
 class ProductAdmin(admin.ModelAdmin):
@@ -11,7 +12,7 @@ class ProductAdmin(admin.ModelAdmin):
     # img_preview.shor_description = "image preview"
 
 admin.site.register(Product,ProductAdmin)
-
+admin.site.register(Permission)
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id','name','description']
