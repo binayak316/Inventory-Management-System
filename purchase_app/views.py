@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMi
 # Create your views here.
 
 
-class PurchaseAPI(GenericAPIView, PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin):
+class PurchaseAPI(GenericAPIView):
     serializer_class = PurchaseSerializer
     permission_classes = [IsAuthenticated]
     queryset = Purchase.objects.all()
@@ -42,10 +42,10 @@ class PurchaseAPI(GenericAPIView, PermissionRequiredMixin, UserPassesTestMixin, 
             purchase.save()
             serializer = PurchaseSerializer(Purchase)
             
-            return Response({'msg':'Purchase is created'}, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+            return Response({'msg':'Purchase is created'}, status = status.HTTP_200_OK)
+        return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
 
-class PurchaseItemAPI(GenericAPIView, PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin):
+class PurchaseItemAPI(GenericAPIView):
     serializer_class = PurchaseItemSerializer
     permission_classes = [IsAuthenticated]
     queryset = PurchaseItem.objects.all()
@@ -64,7 +64,7 @@ class PurchaseItemAPI(GenericAPIView, PermissionRequiredMixin, UserPassesTestMix
         serializer = PurchaseItemSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg':'PurchaseItem is created'}, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+            return Response({'msg':'PurchaseItem is created'}, status = status.HTTP_200_OK)
+        return Response({'error':serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
     

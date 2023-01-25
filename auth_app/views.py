@@ -21,10 +21,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+# from renderers import UserRenderers
 
 # Create your views here.
 
@@ -161,17 +158,17 @@ class UserRegistrationApi(GenericAPIView):
     serializer_class = UserRegistrationSerializer
     def post(self, request, format=None)-> Response:
         serializer = UserRegistrationSerializer(data = request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid(raise_exception=False):
             user = serializer.save()
             return Response ({'msg':'User Registration is successful'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLoginApi(GenericAPIView):
     serializer_class = UserLoginSerializer
     def post(self, request, format=None):
         serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid(raise_exception=False):
             email = serializer.data.get('email')
             user = MyUser.objects.filter(email=email)
             if user:
@@ -190,5 +187,8 @@ class UserLoginApi(GenericAPIView):
             else:
                 # return Response({'errors':'Email or Password is not valid'},status=status.HTTP_404_NOT_FOUND)
                 return Response({'errors':{'non_field_errors':['Email or Password is not valid']}},status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        else:
+            return Response({'error' : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            
 

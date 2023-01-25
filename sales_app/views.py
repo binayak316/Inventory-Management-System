@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
 # Create your views here.
 
-class SalesAPI(GenericAPIView, LoginRequiredMixin,PermissionRequiredMixin, UserPassesTestMixin):
+class SalesAPI(GenericAPIView):
     serializer_class = SalesSerializer
     permission_classes = [IsAuthenticated]
     queryset = Sales.objects.all
@@ -64,11 +64,8 @@ class SalesAPI(GenericAPIView, LoginRequiredMixin,PermissionRequiredMixin, UserP
             serializer = SalesSerializer(Sales)
             
             return Response({'msg':'Sales is created'}, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
         
-
-    
-
 
 
 class SalesItemAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
@@ -91,6 +88,6 @@ class SalesItemAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, U
         if serializer.is_valid():
             serializer.save()
             return Response({'msg':'SalesItem is created'}, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        return Response({'error':serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
     
