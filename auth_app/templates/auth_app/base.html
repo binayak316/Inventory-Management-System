@@ -17,10 +17,23 @@
 
 <body style="background-color: lightgray;">
 
+    <div id="session_message">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}" role="alert">
+            {{message}}
+        </div>
+        {% endfor %}
+    </div>
+
     {% block content %}
 
     {% endblock %}
     <script src="{% static 'auth_app/js/base.css' %}">
+    </script>
+    <script>
+        setTimeout(function () {
+            $('#session_message').fadeOut('fast');
+        }, 5000);
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
