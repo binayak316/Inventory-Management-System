@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework import authentication, permissions
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 
@@ -21,9 +20,9 @@ from product_app import views
 # Create your views here.
 
 
-class CategoryAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
+class CategoryAPI(GenericAPIView):
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Category.objects.all()
 
     def get(self,request,pk=None,format=None):
@@ -39,23 +38,21 @@ class CategoryAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, Us
             serializer = CategorySerializer(cat, many=True)
             return Response(serializer.data)
         else:
-            return Response({'message':"You don't have permissions"})
+            return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self,request,*args,**kwargs):
         serializer = CategorySerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg':'Category is created'}, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+            return Response({'msg':'Category is created'}, status = status.HTTP_200_OK)
+        return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
 
 
-class ProductAPI( GenericAPIView):
+class ProductAPI(GenericAPIView):
     serializer_class = ProductSerializer
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [DjangoModelPermissions,IsAuthenticated ]
     queryset = Product.objects.all()
-
-
     def get(self,request,pk=None,format=None):
         p = Permission.objects.filter(codename='view_product')[0]
         user = request.user
@@ -73,8 +70,8 @@ class ProductAPI( GenericAPIView):
             return Response(serializer.data)
         else:
             return Response({
-                'message' : "You don't have permissions "
-            })
+                'error' : "You don't have permissions "
+            }, status=status.HTTP_400_BAD_REQUEST)
     
 
     def post(self, request, *args, **kwargs):
@@ -82,8 +79,8 @@ class ProductAPI( GenericAPIView):
         if serializer.is_valid():
             serializer.save()
     
-            return Response({'message':'Product is created'}, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':'Product is created'}, status = status.HTTP_200_OK)
+        return Response({'error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     
     def put(self,request,pk,format=None) -> Response:
@@ -91,8 +88,8 @@ class ProductAPI( GenericAPIView):
         serializer = ProductSerializer(full_updt, data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg':'fully updated'})
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response({'msg':'Fully updated'}, status = status.HTTP_200_OK)
+        return Response({'error':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
     
     def patch(self,request,pk,format=None):
@@ -101,14 +98,14 @@ class ProductAPI( GenericAPIView):
         serializer = ProductSerializer(partial_updt, data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg':'Partially product is updated'})
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response({'msg':'Partially product is updated'}, status = status.HTTP_200_OK)
+        return Response({'error':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self,request,pk,format=None)->Response:
         id=pk
         dlt = Product.objects.get(pk=id)
         dlt.delete()
-        return Response({'msg':'Product is deleted'})
+        return Response({'msg':'Product is deleted'},status = status.HTTP_200_OK)
         
 
 

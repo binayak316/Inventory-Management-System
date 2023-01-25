@@ -24,10 +24,10 @@ class Product(models.Model):
     purchase_price = models.FloatField()
     selling_price = models.FloatField()
     type = models.CharField(max_length=50)
-    sku = models.CharField(unique=True, max_length=50, default=1000, blank=True, null=True)
+    sku = models.CharField( max_length=50, default=1000, blank=True, null=True)
     image = models.ImageField(upload_to='images/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE )
-    current_stock = models.IntegerField()
+    current_stock = models.IntegerField(default=0, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -48,7 +48,8 @@ class Product(models.Model):
         if self.sku is None:
             self.sku = 1000
         else:
-            last_sku = Product.objects.all().last()
+            last_sku = Product.objects.all().order_by('sku').last()
+            print(last_sku)
             if last_sku is not None:
                 self.sku = int(last_sku.sku)+ 1
             else:
