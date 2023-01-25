@@ -4,26 +4,35 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from .serializers import SalesItemSerializer, SalesSerializer
+from django.contrib.auth.models import Permission
 from .models import SalesItem, Sales
 from product_app.models import Product
 
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 # Create your views here.
 
 class SalesAPI(GenericAPIView):
     serializer_class = SalesSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = Sales.objects.all
+    permission_classes = [DjangoModelPermissions,IsAuthenticated]
+    queryset = Sales.objects.all()
+
+
     def get(self, request, pk=None, format=None):
-        id = pk
-        if id is not None:
-            sell = Sales.objects.get(id=id)
-            serializer = SalesSerializer(sell)
+        p = Permission.objects.filter(codename='view_sales')[0]
+        user = request.user
+        if p in user.user_permissions.filter(pk=p.pk):
+            
+            id = pk
+            if id is not None:
+                sell = Sales.objects.get(id=id)
+                serializer = SalesSerializer(sell)
+                return Response(serializer.data)
+            sell = Sales.objects.all()
+            serializer = SalesSerializer(sell, many=True)
             return Response(serializer.data)
-        sell = Sales.objects.all()
-        serializer = SalesSerializer(sell, many=True)
-        return Response(serializer.data)
+        else:
+            return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
+
 
     def post(self, request ,*args, **kwargs):
         serializer = SalesSerializer(data = request.data)
@@ -68,20 +77,26 @@ class SalesAPI(GenericAPIView):
         
 
 
-class SalesItemAPI(GenericAPIView,LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin):
+class SalesItemAPI(GenericAPIView):
     serializer_class = SalesItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = SalesItem.objects.all()
     
     def get(self,request,pk=None,format=None):
-        id = pk
-        if id is not None:
-            sales_item = SalesItem.objects.get(id=id)
-            serializer = SalesItemSerializer(sales_item)
+        p = Permission.objects.filter(codename='view_purchaseItem')[0]
+        user = request.user
+        if p in user.user_permissions.filter(pk=p.pk):
+            id = pk
+            if id is not None:
+                sales_item = SalesItem.objects.get(id=id)
+                serializer = SalesItemSerializer(sales_item)
+                return Response(serializer.data)
+            sales_item = SalesItem.objects.all()
+            serializer = SalesItemSerializer(sales_item, many=True)
             return Response(serializer.data)
-        sales_item = SalesItem.objects.all()
-        serializer = SalesItemSerializer(sales_item, many=True)
-        return Response(serializer.data)
+        else:
+            return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
+
 
     def post(self,request,*args,**kwargs):
         serializer = SalesItemSerializer(data = request.data)

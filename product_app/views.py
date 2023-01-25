@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework import authentication, permissions
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 
@@ -23,7 +22,7 @@ from product_app import views
 
 class CategoryAPI(GenericAPIView):
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Category.objects.all()
 
     def get(self,request,pk=None,format=None):

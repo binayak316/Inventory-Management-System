@@ -2,30 +2,34 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-
+from django.contrib.auth.models import Permission
 from rest_framework import status
 from .serializers import PurchaseSerializer,PurchaseItemSerializer
 from .models import Purchase, PurchaseItem
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,DjangoModelPermissions
 #import permission mixins
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin
 # Create your views here.
 
 
 class PurchaseAPI(GenericAPIView):
     serializer_class = PurchaseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Purchase.objects.all()
 
     def get(self, request, pk=None, format=None):
-        id = pk
-        if id is not None:
-            purchase = Purchase.objects.get(id=id)
-            serializer = PurchaseSerializer(purchase)
+        p = Permission.objects.filter(codename='view_purchase')[0]
+        user = request.user
+        if p in user.user_permissions.filter(pk=p.pk):
+            id = pk
+            if id is not None:
+                purchase = Purchase.objects.get(id=id)
+                serializer = PurchaseSerializer(purchase)
+                return Response(serializer.data)
+            purchases = Purchase.objects.all()
+            serializer = PurchaseSerializer(purchases, many=True)
             return Response(serializer.data)
-        purchases = Purchase.objects.all()
-        serializer = PurchaseSerializer(purchases, many=True)
-        return Response(serializer.data)
+        else:
+            return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request ,*args, **kwargs):
         serializer = PurchaseSerializer(data = request.data)
@@ -47,18 +51,24 @@ class PurchaseAPI(GenericAPIView):
 
 class PurchaseItemAPI(GenericAPIView):
     serializer_class = PurchaseItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = PurchaseItem.objects.all()
     
     def get(self,request,pk=None,format=None):
-        id = pk
-        if id is not None:
-            purchase_item = PurchaseItem.objects.get(id=id)
-            serializer = PurchaseItemSerializer(purchase_item)
+        p = Permission.objects.filter(codename='view_purchaseItem')[0]
+        user = request.user
+        if p in user.user_permissions.filter(pk=p.pk):
+            id = pk
+            if id is not None:
+                purchase_item = PurchaseItem.objects.get(id=id)
+                serializer = PurchaseItemSerializer(purchase_item)
+                return Response(serializer.data)
+            purchase_item = PurchaseItem.objects.all()
+            serializer = PurchaseItemSerializer(purchase_item, many=True)
             return Response(serializer.data)
-        purchase_item = PurchaseItem.objects.all()
-        serializer = PurchaseItemSerializer(purchase_item, many=True)
-        return Response(serializer.data)
+        else:
+            return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
+      
 
     def post(self,request,*args,**kwargs):
         serializer = PurchaseItemSerializer(data = request.data)

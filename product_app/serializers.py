@@ -6,6 +6,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model= Product
         fields = '__all__'
+        # exclude = ['sku']
 
 
 class CategorySerializer(serializers.ModelSerializer):
