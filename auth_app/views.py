@@ -28,6 +28,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 
+
 def otp_generate():
     digits = "123456789"
     otp = ""
@@ -160,8 +161,10 @@ class UserRegistrationApi(GenericAPIView):
         serializer = UserRegistrationSerializer(data = request.data)
         if serializer.is_valid(raise_exception=False):
             user = serializer.save()
+
             return Response ({'msg':'User Registration is successful'}, status=status.HTTP_200_OK)
         return Response({"error":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class UserLoginApi(GenericAPIView):
