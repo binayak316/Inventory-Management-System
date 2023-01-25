@@ -75,10 +75,8 @@ def register_page(request):
                 otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
                 otp.save()
                 send_mail(otp.otp, user.email)# paxillo otp is the otp retrived from db
-                messages.success(request, "OTP send successfully")
                 return redirect(f'/check_otp/{user.id}')
             else:
-                messages.error(request, "Please filled the required field!")
                 print(register_form.errors)
         else:
             

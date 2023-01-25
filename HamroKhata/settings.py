@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
-from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -387,12 +386,3 @@ EMAIL_HOST_PASSWORD = 'sugopyinfxmtorlk'
 AUTH_USER_MODEL = 'auth_app.MyUser'
 
 REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER':'auth_app.serializers.UserRegistrationSerializer' }
-
-
-MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-secondary',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
-}
