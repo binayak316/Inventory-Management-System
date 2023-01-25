@@ -98,8 +98,16 @@ form .loginButton:hover {
     font-weight: bold;
 }
 
-#session_message {
+/* #session_message {
     position: absolute;
     right: 25px;
     top: 25px;
+} */
+
+#session_message_div {
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
 }

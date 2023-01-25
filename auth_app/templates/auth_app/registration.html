@@ -12,6 +12,15 @@
         <div class="col-12 mt-2 logoImage">
           <img src="{% static '/images/logo.png' %}" alt="App Logo">
         </div>
+
+        <div id="session_message" class="mt-4">
+          {% for message in messages %}
+          <div id="session_message_div" class="alert {{ message.tags }}" role="alert">
+            {{message}}
+          </div>
+          {% endfor %}
+        </div>
+
         <div class="d-flex mt-4">
           <div class="col-6">
             <label for="firstname">Firstname</label>

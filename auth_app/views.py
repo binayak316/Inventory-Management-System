@@ -33,7 +33,7 @@ def otp_generate():
     digits = "123456789"
     otp = ""
 
-    for i in range(5):
+    for i in range(6):
         otp += digits[math.floor(random.random()*10)]
     return otp
 
@@ -74,7 +74,7 @@ def register_page(request):
     if not request.user.is_authenticated:
         if request.method == "POST":
             register_form  = MyUserForm(request.POST)
-            print(request.POST)
+            # print(request.POST)
             if register_form.is_valid():
                 # print(register_form)
                 user = register_form.save()
@@ -82,8 +82,10 @@ def register_page(request):
                 otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
                 otp.save()
                 send_mail(otp.otp, user.email)# paxillo otp is the otp retrived from db
+                messages.success(request, "OTP has been sent please check your email")
                 return redirect(f'/check_otp/{user.id}')
             else:
+                messages.error(request, "Something went wrong!")
                 print(register_form.errors)
         else:
             
