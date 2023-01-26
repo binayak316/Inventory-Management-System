@@ -70,11 +70,19 @@ class SalesAPI(GenericAPIView):
 
             sales.save()
 
-            serializer = SalesSerializer(Sales)
+            serializer = SalesSerializer(sales)
+            #serializer = SalesSerializer(data = request.data) this includes the api with blank data
+            #after serializer = SalesSerializer(sales) then it is the serializer which have the values which i put recently
+            #this serializer goes to the response
             
-            return Response({'msg':'Sales is created'}, status = status.HTTP_201_CREATED)
+
+            return Response({
+                'msg':'Sales is created',
+                 'status': status.HTTP_201_CREATED, 
+                 'data' : serializer.data,
+                 }, status = status.HTTP_201_CREATED)
         return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
-        
+         
 
 
 class SalesItemAPI(GenericAPIView):
@@ -106,3 +114,21 @@ class SalesItemAPI(GenericAPIView):
         return Response({'error':serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

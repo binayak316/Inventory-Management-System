@@ -44,9 +44,9 @@ class PurchaseAPI(GenericAPIView):
             purchase.sub_total = purchase.get_subtotal()
             purchase.grand_total = purchase.get_grandtotal()
             purchase.save()
-            serializer = PurchaseSerializer(Purchase)
+            # serializer = PurchaseSerializer(Purchase)
             
-            return Response({'msg':'Purchase is created'}, status = status.HTTP_200_OK)
+            return Response({'msg':'Purchase is created', 'data': serializer.data}, status = status.HTTP_200_OK)
         return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
 
 class PurchaseItemAPI(GenericAPIView):
