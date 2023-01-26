@@ -11,13 +11,18 @@
         <img src="{% static '/images/logo.png' %}" alt="">
 
       </div>
-      {% for message in messages %}
-      {{message}}
-      {% endfor %}
 
 
       <div class="col-md-12 login_heading">
-        <p class="form-text">login to Hamro Khata</p>
+        <p class="form-text" id="aaaa">login to Hamro Khata</p>
+
+        <div id="session_message">
+          {% for message in messages %}
+          <div id="session_message_div" class="alert {{ message.tags }}" role="alert">
+            {{message}}
+          </div>
+          {% endfor %}
+        </div>
 
 
 
@@ -52,8 +57,6 @@
     </form>
   </div>
 </div>
-
-
 
 
 <script>

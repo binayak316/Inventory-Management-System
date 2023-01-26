@@ -97,3 +97,17 @@ form .loginButton:hover {
     color: white;
     font-weight: bold;
 }
+
+/* #session_message {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+} */
+
+#session_message_div {
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
