@@ -9,6 +9,7 @@ from django.shortcuts import reverse
 
 class SalesItem(models.Model):
     # sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
+
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
     total = models.FloatField(blank=True, null=True) #this is the total amount which is calculated by product price * quantity
@@ -35,6 +36,7 @@ class Sales(models.Model):
         ('Completed','Completed'),
         ('Failed','Failed'),
     )
+    invoice_number = models.CharField(default='SAL-1500', max_length=10, null=True, blank=True)
 # customer lai sell garinxa so foreign key
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL , null=True)
     sales_items = models.ManyToManyField(SalesItem)
@@ -45,6 +47,8 @@ class Sales(models.Model):
     discount_amount = models.FloatField(null=True, blank=True)
     disc_percent = models.FloatField(blank=True, default=0.0)
     tax_percent = models.FloatField( blank=True, default=0.0)
+
+
     
     status = models.CharField(max_length=10,choices=STATUS_CHOICES)
 
@@ -82,6 +86,23 @@ class Sales(models.Model):
         sales_items = SalesItem.objects.filter(sales=self.id)
         return sales_items
 
-    
+    def save(self, *args, **kwargs):
+        if self.invoice_number is None:
+            self.invoice_number = str('SAL-1500')
+        else:
+            last_inv = Sales.objects.all().order_by('invoice_number').last()
+            if not last_inv:
+                self.invoice_number = "SAL-1500"
+            else:
+                self.invoice_number = "SAL-" + str(int(str(last_inv.invoice_number).split('-')[1]) + 1)
+        super().save()            
 
 
+
+            # if not last_inv:
+            #     invoice_number = "SAL-1500"
+            # else:
+            #     invoice_number = "SAL-" + str(int(str(last_inv.invoice_number).split('-')[1]) + 1)
+            
+            # self.invoice_number = invoice_number
+            # super().save()

@@ -33,6 +33,7 @@ class Purchase(models.Model):
         ('Completed','Completed'),
         ('Failed','Failed'),
     )
+    bill_number = models.CharField(default='PUR-1500', max_length=10, null=True, blank=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)
     purchase_items = models.ManyToManyField(PurchaseItem) 
 
@@ -63,6 +64,7 @@ class Purchase(models.Model):
                 return float(total)
             return total
     
+    
 
 
     def get_purchaseitem(self):
@@ -78,4 +80,14 @@ class Purchase(models.Model):
 
         return grand_total
 
+    def save(self, *args, **kwargs):
+        if self.bill_number is None:
+            self.bill_number = str('PUR-1500')
+        else:
+            last_bill = Purchase.objects.all().order_by('bill_number').last()
+            if not last_bill:
+                self.bill_number = "PUR-1500"
+            else:
+                self.bill_number = "PUR-" + str(int(str(last_bill.bill_number).split('-')[1]) + 1)
+        super().save()
 

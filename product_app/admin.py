@@ -5,7 +5,7 @@ from django.contrib.auth.models import Permission
 # Register your models here.
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id','name','purchase_price','selling_price','sku', 'category','current_stock', 'img_preview']
+    list_display = ['name','id','purchase_price','selling_price','sku', 'category','current_stock', 'img_preview']
 
     def img_preview(self, obj):
         return format_html('<img src="{}" width=70px height="50px" style="object-fit:cover;" />'.format(obj.image.url if obj.image else '/static/images/images.png'))
