@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMi
 
 
 class VendorAPI(GenericAPIView):
+    """Vendor Api is Generic Api which defines the vendors their name basically vendors are used while we purchased the item"""
     serializer_class = VendorSerializer
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Vendor.objects.all()
@@ -40,7 +41,8 @@ class VendorAPI(GenericAPIView):
         return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
             
 
-class CustomerAPI(GenericAPIView, LoginRequiredMixin,PermissionRequiredMixin, UserPassesTestMixin, ):
+class CustomerAPI(GenericAPIView ):
+    """CustomerAPI is Generic Api View which defines the customers and customers are used when the sales occurs (sales is done to the customers)"""
     serializer_class = CustomerSerializer
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Customer.objects.all()

@@ -12,6 +12,9 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 # Create your views here.
 
 class SalesAPI(GenericAPIView):
+    """Sales API is the Generic API view for the Sales items it
+    calculates the total, subtotal, grandtotal, tax_amount and discount_amount 
+    while selling the products and products is sell to the customers from this inventory """
     serializer_class = SalesSerializer
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Sales.objects.all()
@@ -86,6 +89,7 @@ class SalesAPI(GenericAPIView):
 
 
 class SalesItemAPI(GenericAPIView):
+    """SalesItem is Generic Api view and it is the process of once like it only calculates total from the products and quantity """
     serializer_class = SalesItemSerializer
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = SalesItem.objects.all()
