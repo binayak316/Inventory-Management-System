@@ -12,6 +12,9 @@ from rest_framework.permissions import IsAuthenticated,DjangoModelPermissions
 
 
 class PurchaseAPI(GenericAPIView):
+    """It defines the Generic API View for the products and calculates
+    total, grandtotal, subtotal, tax amount and discount amount for the purchased
+    Item and Items are purchased from the vendors """
     serializer_class = PurchaseSerializer
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Purchase.objects.all()
@@ -50,6 +53,7 @@ class PurchaseAPI(GenericAPIView):
         return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
 
 class PurchaseItemAPI(GenericAPIView):
+    """It is a Generic API view for the purchaseitem where it means purchase of item once where it calculates only total like products * quantity"""
     serializer_class = PurchaseItemSerializer
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = PurchaseItem.objects.all()

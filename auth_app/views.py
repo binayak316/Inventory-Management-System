@@ -30,6 +30,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def otp_generate():
+    """
+    Generates the OTP.
+    """
     digits = "123456789"
     otp = ""
 
@@ -38,6 +41,7 @@ def otp_generate():
     return otp
 
 def send_mail(otp, reciever_email): # send mail le kk linxa (otp ra receiver male linxa)
+    """Sends the mail to the user mail id."""
     # otp = otp_generate()
     email = EmailMessage(
         'Hamro khata OTP',
@@ -50,6 +54,7 @@ def send_mail(otp, reciever_email): # send mail le kk linxa (otp ra receiver mal
 
     # print(email)
 def check_otp(request, user_id):
+    """Checks the OTP number of database with the mail """
     if not  request.user.is_authenticated:
         if request.method == "POST":
             user = MyUser.objects.get(id=user_id)
@@ -71,6 +76,7 @@ def check_otp(request, user_id):
      
 
 def register_page(request):
+    """Registeration of the users"""
     if not request.user.is_authenticated:
         if request.method == "POST":
             register_form  = MyUserForm(request.POST)
@@ -101,6 +107,7 @@ def register_page(request):
     
 
 def login_page(request):
+    """User login """
     if not request.user.is_authenticated:
         if request.method == "POST":
             email = request.POST['email']
@@ -134,6 +141,7 @@ def login_page(request):
         return HttpResponseRedirect('/')
 
 def index(request):
+    """Frontend index page"""
     if request.user.is_authenticated:
         return redirect("/dashboard")
     else:
@@ -149,6 +157,7 @@ def logout_page(request):
 
 #generate token manually
 def get_tokens_for_user(user):
+    """Token generation for the API's."""
     refresh = RefreshToken.for_user(user)
     if refresh is None:
         return {'error': 'Refresh token not found'}
@@ -158,6 +167,7 @@ def get_tokens_for_user(user):
     }
 
 class UserRegistrationApi(GenericAPIView):
+    """Api for the user registration."""
     serializer_class = UserRegistrationSerializer
     def post(self, request, format=None)-> Response:
         serializer = UserRegistrationSerializer(data = request.data)
@@ -170,6 +180,7 @@ class UserRegistrationApi(GenericAPIView):
 
 
 class UserLoginApi(GenericAPIView):
+    """Api for the user login."""
     serializer_class = UserLoginSerializer
     def post(self, request, format=None):
         serializer = UserLoginSerializer(data=request.data)

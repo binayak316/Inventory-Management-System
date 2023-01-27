@@ -21,6 +21,7 @@ from product_app import views
 
 
 class CategoryAPI(GenericAPIView):
+    """It defines a generic API view that defines the category for products."""
     serializer_class = CategorySerializer
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     queryset = Category.objects.all()
@@ -49,6 +50,7 @@ class CategoryAPI(GenericAPIView):
 
 
 class ProductAPI(GenericAPIView):
+    """It defines a generic API view that defines the products."""
     serializer_class = ProductSerializer
     # authentication_classes = [JWTAuthentication]
     permission_classes = [DjangoModelPermissions,IsAuthenticated ]
