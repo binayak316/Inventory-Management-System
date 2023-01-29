@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Purchase, PurchaseItem
 import os
+from django.utils.html import format_html
 # Register your models here.
 
 # class PurchaseAdmin(admin.ModelAdmin):
@@ -26,11 +27,12 @@ class PurchaseAdmin(admin.ModelAdmin):
         purchase_items = PurchaseItem.objects.filter(purchase=obj.id)
         value = ""
         for item in purchase_items:
-            line = '\n'
+            line = '<br>'
             # data = "Products : %s \n\t Quantity : %s " % (item.product.name , item.quantity)
             # value += data
-            value += f"""{item.product.name} ({item.quantity})"""
-            # value += {item.product.name}+""+str({item.quantity}) +'\n'\
-        return value
+            # value += f"""{item.product.name} ({item.quantity})""" + '<br>'
+            value += f"""{item.product.name} ({item.quantity}) <br>"""
+        return format_html(value)
+        # return value
 
 admin.site.register(Purchase,PurchaseAdmin)
