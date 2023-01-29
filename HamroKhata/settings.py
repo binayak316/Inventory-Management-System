@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',    
     'rest_framework.authtoken',
+    'django_filters',
 ]
 
 JAZZMIN_SETTINGS = {
@@ -82,7 +83,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "Hamro Khata ",
 
     
-    "search_model": ["auth.User", "auth.Group","product_app.product","third_party.vendor" ],
+    "search_model": ["auth.User", "auth.Group",],
 
     "user_avatar": None,
 

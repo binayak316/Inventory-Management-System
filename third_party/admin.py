@@ -5,9 +5,12 @@ from .models import Customer, Vendor
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'phone', 'email']
 
+    search_fields=['name']
+
 admin.site.register(Customer,CustomerAdmin)
 
 class VendorAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'type']
+    search_fields = ['name']
 
 admin.site.register(Vendor, VendorAdmin)
