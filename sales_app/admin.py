@@ -12,6 +12,8 @@ class SalesItemInline(admin.TabularInline):
 
 class SalesAdmin(admin.ModelAdmin):
     list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','customer','items','invoice_number', 'status']
+    search_fields = ['customer__name', 'invoice_number']
+    list_filter = ['status',]
     # inlines = [SalesItemInline]
 
     def items(self, obj):
