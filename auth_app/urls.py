@@ -1,6 +1,6 @@
 from django.urls import path
 from auth_app import views
-from auth_app.views import UserRegistrationApi, UserLoginApi
+from auth_app.views import UserRegistrationApi, UserLoginApi, CheckOtpApi
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -18,6 +18,7 @@ urlpatterns = [
 
     # auth_app api's
     path('api/register/', UserRegistrationApi.as_view(), name='register-api'),
+    path('api/checkotp/', CheckOtpApi.as_view(), name="check-otp"),
     path('api/login/', UserLoginApi.as_view(), name='login-api'),
 
     # token for refresh and token generation

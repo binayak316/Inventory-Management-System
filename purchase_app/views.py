@@ -35,6 +35,8 @@ class PurchaseAPI(GenericAPIView):
             return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request ,*args, **kwargs):
+        # print(request.data)
+        # print(request.data.purchase_items)
         serializer = PurchaseSerializer(data = request.data)
         # print(serializer)
 

@@ -14,7 +14,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import UserRegistrationSerializer, UserLoginSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckOtpSerializer
 from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth.decorators import login_required
@@ -36,7 +36,7 @@ def otp_generate():
     digits = "123456789"
     otp = ""
 
-    for i in range(6):
+    for i in range(5):
         otp += digits[math.floor(random.random()*10)]
     return otp
 
@@ -60,7 +60,7 @@ def check_otp(request, user_id):
             user = MyUser.objects.get(id=user_id)
             user_otp = request.POST["otp"]
             # print(user, user_otp)
-            otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first()
+            otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first() # agadi ko myuser is a model and otp is also a model
             # print(otp.otp, user_otp)
             if otp:
                 if str(user_otp) == str(otp.otp):
@@ -173,11 +173,42 @@ class UserRegistrationApi(GenericAPIView):
         serializer = UserRegistrationSerializer(data = request.data)
         if serializer.is_valid(raise_exception=False):
             user = serializer.save()
-
-            return Response ({'msg':'User Registration is successful'}, status=status.HTTP_200_OK)
+            otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
+            otp.save()
+            send_mail(otp.otp,user.email)
+            return Response ({'msg':'Registration is success please verify your OTP to login'}, status=status.HTTP_200_OK)
         return Response({"error":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
-
+class CheckOtpApi(GenericAPIView):
+    serializer_class = CheckOtpSerializer
+    def post(self, request, format=None):
+        serializer = CheckOtpSerializer(data=request.data)
+        if serializer.is_valid():
+            user_id = request.data.get('user_id') 
+            print(user_id)
+            user = MyUser.objects.get(id=user_id)
+            user_otp = serializer.data.get('otp')
+            stored_otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first()
+            if stored_otp:
+                if str(user_otp) == str(stored_otp.otp):
+                    return Response({
+                        'status': 'success',
+                        'message': 'OTP is valid'})
+                else:
+                    return Response({
+                        'status': 'error', 
+                        'message': 'OTP is invalid'
+                        })
+            else:
+                return Response({
+                    'status': 'error',
+                    'message': 'OTP is Expired'
+                    })
+        else:
+            return Response({
+                'status': 'error',
+                'message': 'Invalid data'
+                })        
 
 class UserLoginApi(GenericAPIView):
     """Api for the user login."""
