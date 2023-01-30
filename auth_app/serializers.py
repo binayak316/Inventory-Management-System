@@ -40,6 +40,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+class CheckOtpSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OtpModel
+        fields = '__all__'
+
 
 class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True, max_length=255)
