@@ -13,6 +13,7 @@ from django.core.mail import EmailMessage
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.db.models import Q
 
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckOtpSerializer
 from rest_framework.generics import GenericAPIView
@@ -20,6 +21,8 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
+
+from django.contrib.auth.forms import PasswordResetForm
 
 # from renderers import UserRenderers
 
@@ -37,7 +40,7 @@ def otp_generate():
     otp = ""
 
     for i in range(5):
-        otp += digits[math.floor(random.random()*10)]
+        otp += digits[math.floor(random.random()*9)]
     return otp
 
 def send_mail(otp, reciever_email): # send mail le kk linxa (otp ra receiver male linxa)
@@ -53,7 +56,7 @@ def send_mail(otp, reciever_email): # send mail le kk linxa (otp ra receiver mal
     email.send()
 
     # print(email)
-def check_otp(request, user_id):
+def check_otp(request,user_id): #user_id urls ko parameter hunxa ra target pani tei hunxa
     """Checks the OTP number of database with the mail """
     if not  request.user.is_authenticated:
         if request.method == "POST":
@@ -63,8 +66,17 @@ def check_otp(request, user_id):
             otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first() # agadi ko myuser is a model and otp is also a model
             # print(otp.otp, user_otp)
             if otp:
-                if str(user_otp) == str(otp.otp):
-                    return redirect('/login/')
+                if str(user_otp) == str(otp.otp): #after otp check
+                    target = request.session['target']
+                    if target:
+                        if target.lower().strip() == 'forgot':
+                            return redirect('/password-reset-confirm/')
+                            # pass#redirect to ask for password form
+                            
+                        elif target.lower().strip() == 'register':
+                            return redirect('/login/')
+                            # pass                  #redirect to login
+                
                 else:
                     messages.error(request, "Invalid OTP")
             else:
@@ -91,7 +103,7 @@ def register_page(request):
                 messages.success(request, "OTP has been sent please check your email")
                 return redirect(f'/check_otp/{user.id}')
             else:
-                messages.error(request, "Something went wrong!")
+                messages.error(request, "Please input the required fields!")
                 print(register_form.errors)
         else:
             
@@ -153,6 +165,46 @@ def logout_page(request):
     return redirect('login-page')
 
 
+
+def password_reset_page(request , target): #target parameter is to handle the sessions for 2 mechanishm (forget pw and login process)
+    """function that takes an email for forget pw"""
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = MyUser.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    user = associated_users.first()
+                    otp = otp_generate()
+                    otp_instance = OtpModel(myuser=user, otp=otp, created_at=datetime.now())
+                    otp_instance.save()
+                    send_mail(otp, user.email)
+                    messages.success(request, "OTP has been sent to your email")
+
+
+                    if target.lower().strip() == 'forgot': #target is parameter and forgot is parameter for forget mechanaishm and register for registeration process mechanishm
+                        request.session['target'] = 'forgot'
+                        return redirect(f'/check_otp/{user.id}')
+                        # return redirect(f'password-reset/forgot/check_otp/{user_id}')
+                    else:
+                        request.session['target'] = 'register'
+                        return redirect(f'/check_otp/{user.id}')
+                    
+                    # request.session['target'] = 'forgot' if target.lower().strip() == 'forgot' else 'register'
+                        
+                    
+            else:
+                messages.error(request, "No user found with the provided email")
+        else:
+            messages.error(request, "Invalid form data")
+        
+    return render(request, 'auth_app/password/password_reset.html', {'form':PasswordResetForm()})
+
+
+def password_reset_confirm_page(request):
+    "function that calls the password and confirm password page"
+    return render(request, 'auth_app/password/password_reset_confirm.html')
 # auth_app api's
 
 #generate token manually
@@ -165,6 +217,8 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+
+
 
 class UserRegistrationApi(GenericAPIView):
     """Api for the user registration."""

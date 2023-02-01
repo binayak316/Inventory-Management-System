@@ -5,13 +5,17 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-
+# app_name = 'auth_app'
 
 urlpatterns = [
     path('', views.index, name="index"),
     path('register/', views.register_page, name="register-page"),
     path('login/',views.login_page, name="login-page"),
     path('logout-user/', views.logout_page, name='logout-page'),
+
+    path('password-reset/<str:target>/',views.password_reset_page, name='password-reset' ),
+    path('password-reset-confirm/',views.password_reset_confirm_page, name='password-reset-confirm' ),
+
 
     # otp form
     path('check_otp/<int:user_id>', views.check_otp, name='check_otp'),

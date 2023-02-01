@@ -1,6 +1,11 @@
 {% extends 'auth_app/base.html' %}
 {% load static %}
 
+{{ redirect_to_login_immediately }}
+
+
+
+
 {% block content %}
 <div class="container loginContainer">
   <div class="row">
@@ -47,12 +52,12 @@
       <input type="submit" class="btn btn mt-5 loginButton" value="Login">
       <br><br>
       <div class="col-md-12 text-center resetPassword">
-        <a href="#" class="text-secondary">I forgot my password</a>
+        <a href="{% url 'password-reset' 'forgot' %}" class="text-dark">I forgot my password</a>
       </div>
 
       <div class="text-center registerUser text-secondary">
         <p>Don't have account?</p> &nbsp;
-        <a href="/register" class="text-dark">Sign Up</a>
+        <a href="{% url 'register-page' %}" class="text-dark">Sign Up</a>
       </div>
     </form>
   </div>
