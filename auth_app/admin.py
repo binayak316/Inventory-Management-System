@@ -4,6 +4,15 @@ from .models import MyUser, OtpModel
 from .forms import MyUserForm
 # Register your models here.
 
+#  discovery of page starts
+
+from .views import login_page, logout_page
+# this discover the pages and points django login to login_page
+admin.autodiscover()
+admin.site.login = login_page
+admin.site.logout = logout_page
+
+# discovery of page ends
 
 
 

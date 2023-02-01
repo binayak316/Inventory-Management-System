@@ -1,99 +1,89 @@
-
-{% extends "registration/base.html" %}
+{% extends 'auth_app/base.html' %}
 {% load static %}
 
-{% load i18n jazzmin %}
-{% get_jazzmin_settings request as jazzmin_settings %}
-{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+{{ redirect_to_login_immediately }}
+
+
+
 
 {% block content %}
-    <!-- <p class="login-box-msg">{{ jazzmin_settings.welcome_sign }}</p> -->
-<!-- logo for login page starts -->
-<div>
-    <div class="d-flex justify-content-center" style="margin-top: -10px;">
-        <img src="{% static 'images/logo.png' %}" style="height:74px;width:400px;" alt="">
-    </div>
-    <div class="d-flex justify-content-center">
-    </div>
-</div>
-<!-- logo for login page ends -->
-    <form action="{{ app_path }}" method="post">
-        {% csrf_token %}
-        {% if user.is_authenticated %}
-            <p class="errornote">
-                <div class="callout callout-danger">
-                    <p>
-                        {% blocktrans trimmed %}
-                            You are authenticated as {{ username }}, but are not authorized to
-                            access this page. Would you like to login to a different account?
-                        {% endblocktrans %}
-                    </p>
-                </div>
-            </p>
-        {% endif %}
-        {% if form.errors %}
-            {% if form.username.errors %}
-                <div class="callout callout-danger">
-                    <p>{{ form.username.label }}: {{ form.username.errors|join:', ' }}</p>
-                </div>
-            {% endif %}
-            {% if form.password.errors %}
-                <div class="callout callout-danger">
-                    <p>{{ form.password.label }}: {{ form.password.errors|join:', ' }}</p>
-                </div>
-            {% endif %}
-            {% if form.non_field_errors %}
-                <div class="callout callout-danger">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endif %}
-        <div class="input-group mb-3">
-            <input type="text" name="username" class="form-control" placeholder="{{ form.username.label }}" required>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-user"></span>
-                </div>
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control" placeholder="{{ form.password.label }}" required>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
-                </div>
-            </div>
-        </div>
-        {% url 'admin_password_reset' as password_reset_url %}
-        {% if password_reset_url %}
-            <div class="mb-3">
-                <div class="password-reset-link" style="text-align: center;">
-                    <a href="{{ password_reset_url }}">
-                        <!-- {% trans 'Forgotten your password or username?' %} -->
-                    </a>
-                </div>
-            </div>
-        {% endif %}
-        <div class="row">
-            <div class="col-12">
-                
-                <button type="submit" class="btn {{ jazzmin_ui.button_classes.primary }} btn-block login_button">
-                    
-                    {% trans "Log in" %}
-                </button>
-               <div class="d-flex justify-content-center align-items-center forget_locker mt-1" >
-                <i class="fas fa-lock fa-2xs"></i><a href="" class="d-flex justify-content-center mt-1 forget_password_link " > Forgot  the Password</a>
-               </div>
-            </div>
-        </div>
-    </form>
+<div class="container loginContainer">
+  <div class="row">
 
-    <script>
-        var logo = document.getElementsByTagName('picture');
-        console.log(logo[0]);
-        logo[0].style.display = 'none'
-        </script>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="col-md-12 logoImageLogin">
+        <img src="{% static '/images/logo.png' %}" alt="">
+
+      </div>
+
+
+      <div class="col-md-12 login_heading">
+        <p class="form-text" id="aaaa">login to Hamro Khata</p>
+
+        <div id="session_message">
+          {% for message in messages %}
+          <div id="session_message_div" class="alert {{ message.tags }}" role="alert">
+            {{message}}
+          </div>
+          {% endfor %}
+        </div>
+
+
+
+      </div>
+      <div class="col-md-12">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email">
+      </div><br>
+      <div class="col-md-12">
+        <label for="password" class="form-label">Password</label>
+        <div class="passwordRow d-flex">
+          <input type="password" class="form-control" name="password2" id="password" placeholder="Enter your password">
+          <div class="input-group-append">
+            <span class="input-group-text loginEye" onclick="password_show_hide();">
+              <i class="fa-solid fa-eye" id="show_eye"></i>
+              <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <input type="submit" class="btn btn mt-5 loginButton" value="Login">
+      <br><br>
+      <div class="col-md-12 text-center resetPassword">
+        <a href="{% url 'password-reset' 'forgot' %}" class="text-dark">I forgot my password</a>
+      </div>
+
+      <div class="text-center registerUser text-secondary">
+        <p>Don't have account?</p> &nbsp;
+        <a href="{% url 'register-page' %}" class="text-dark">Sign Up</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  function password_show_hide() {
+    var x = document.getElementById("password");
+    var show_eye = document.getElementById("show_eye");
+    var hide_eye = document.getElementById("hide_eye");
+    hide_eye.classList.remove("d-none");
+    if (x.type === "password") {
+      x.type = "text";
+      show_eye.style.display = "none";
+      hide_eye.style.display = "block";
+    } else {
+      x.type = "password";
+      show_eye.style.display = "block";
+      hide_eye.style.display = "none";
+    }
+  }
+</script>
+
+
+
+
 
 {% endblock %}
