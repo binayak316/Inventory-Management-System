@@ -17,6 +17,7 @@ urlpatterns = [
     path('password-reset-confirm/',views.password_reset_confirm_page, name='password-reset-confirm' ),
 
 
+
     # otp form
     path('check_otp/<int:user_id>', views.check_otp, name='check_otp'),
 

@@ -22,7 +22,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 # from renderers import UserRenderers
 
@@ -61,6 +62,7 @@ def check_otp(request,user_id): #user_id urls ko parameter hunxa ra target pani 
     if not  request.user.is_authenticated:
         if request.method == "POST":
             user = MyUser.objects.get(id=user_id)
+            # print{user} eha email aaxa
             user_otp = request.POST["otp"]
             # print(user, user_otp)
             otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first() # agadi ko myuser is a model and otp is also a model
@@ -71,16 +73,14 @@ def check_otp(request,user_id): #user_id urls ko parameter hunxa ra target pani 
                     if target:
                         if target.lower().strip() == 'forgot':
                             return redirect('/password-reset-confirm/')
-                            # pass#redirect to ask for password form
                             
                         elif target.lower().strip() == 'register':
                             return redirect('/login/')
-                            # pass                  #redirect to login
                 
                 else:
                     messages.error(request, "Invalid OTP")
             else:
-                messages.error(request, 'OTP is expired')
+                messages.error(request, "OTP didn't match ")
 
         return render(request, 'auth_app/check_otp.html')
     else:
@@ -101,10 +101,11 @@ def register_page(request):
                 otp.save()
                 send_mail(otp.otp, user.email)# paxillo otp is the otp retrived from db
                 messages.success(request, "OTP has been sent please check your email")
+                request.session['target'] = 'register'
                 return redirect(f'/check_otp/{user.id}')
             else:
-                messages.error(request, "Please input the required fields!")
-                print(register_form.errors)
+                messages.error(request, register_form.errors)
+                # print(register_form.errors)
         else:
             
             register_form = MyUserForm()
@@ -185,8 +186,8 @@ def password_reset_page(request , target): #target parameter is to handle the se
 
                     if target.lower().strip() == 'forgot': #target is parameter and forgot is parameter for forget mechanaishm and register for registeration process mechanishm
                         request.session['target'] = 'forgot'
+                        request.session['hamrokhata_user_id'] = user.id
                         return redirect(f'/check_otp/{user.id}')
-                        # return redirect(f'password-reset/forgot/check_otp/{user_id}')
                     else:
                         request.session['target'] = 'register'
                         return redirect(f'/check_otp/{user.id}')
@@ -201,11 +202,41 @@ def password_reset_page(request , target): #target parameter is to handle the se
         
     return render(request, 'auth_app/password/password_reset.html', {'form':PasswordResetForm()})
 
-
+# @user_not_authenticated
+# @login_required
 def password_reset_confirm_page(request):
-    "function that calls the password and confirm password page"
-    return render(request, 'auth_app/password/password_reset_confirm.html')
-# auth_app api's
+    "function that calls the password and confirm password page to make a new password when the users forgot"
+    # user = MyUser.objects.get(email=request.POST.get('email'))
+
+    if request.method == "POST":
+        # print(request.data) #password1 ra password 2 auxa
+
+        if 'hamrokhata_user_id' in  request.session:
+            user = MyUser.objects.get(id=request.session['hamrokhata_user_id'])
+            print(user)
+            new_password1 = request.POST.get('new_password1')
+            new_password2 = request.POST.get('new_password2')
+            if new_password1 == new_password2:
+                user.set_password(new_password1)    
+                user.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Password reset successful.')
+                # after resetting the password kill the session 
+                if request.session['target']:
+                    del request.session['target']
+
+                return redirect('/login/')
+            else:
+                messages.error(request,'Passwords do not match')
+                
+        else:
+            messages.error(request, "something went wrong")
+            return redirect('/password-reset/forgot')
+        # request.session['id'] = user_id
+        
+   
+    return render(request, 'auth_app/password/password_reset_confirm.html',)
+# auth_app api'sF
 
 #generate token manually
 def get_tokens_for_user(user):
