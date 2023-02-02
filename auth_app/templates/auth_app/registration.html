@@ -1,6 +1,11 @@
 {% extends 'auth_app/base.html' %}
 {% load static %}
 
+{% block title %}Registration Page{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'auth_app/css/registration.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container mt-4 signupForm">
   <form action="" method="POST">
@@ -9,7 +14,7 @@
       <div class="col-3 left-side">
       </div>
       <div class="col-6 centralpart">
-        <div class="col-12 mt-2 logoImage">
+        <div class="col-12 mt-3 logoImage">
           <img src="{% static '/images/logo.png' %}" alt="App Logo">
         </div>
 

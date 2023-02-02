@@ -1,8 +1,11 @@
 {% extends 'auth_app/base.html' %}
 {% load static %}
+{% block title %}Login Page{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'auth_app/css/login.css' %}">
+{% endblock %}
 
 {{ redirect_to_login_immediately }}
-
 
 
 
@@ -12,7 +15,7 @@
 
     <form action="" method="POST">
       {% csrf_token %}
-      <div class="col-md-12 logoImageLogin">
+      <div class="col-md-12 mt-2 logoImageLogin">
         <img src="{% static '/images/logo.png' %}" alt="">
 
       </div>

@@ -1,16 +1,21 @@
 {% extends 'auth_app/base.html' %}
 {% load static %}
 
+{% block title %}OTP Verification{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'auth_app/css/otp.css' %}">
+{% endblock %}
+
 {% block content %}
 
 <div class="container otpContainer">
   <div class="row">
     <form action="" method="post">
       {%csrf_token%}
-      <div class="col-12 logoImage">
+      <div class="col-12 logoImage" style="background-color: #d9d9d9 !important;">
         <img src="{% static '/images/logo.png' %}" alt="" height="90" width="">
       </div>
-      <div class="mt-3">
+      <div class="mt-2">
         <p class="text-muted small d-flex justify-content-center">Please enter the OTP to access login page</p>
       </div>
 
@@ -23,7 +28,7 @@
       </div>
 
       <div class="col-12">
-        <input type="text" name="otp" class="form-control">
+        <input type="text" name="otp" class="form-control" placeholder="OTP">
       </div>
       <div class="d-flex" style="gap: 2px;">
         <div class="col-6">

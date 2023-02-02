@@ -14,14 +14,15 @@
 .centralpart {
     border-radius: 10px;
     background: white !important;
-    box-shadow: 2px 2px 2px gray;
-    margin-left: 14%;
+    box-shadow: 0 0 12px black;
+    margin-left: 12%;
 }
 
 .logoImage img {
-    height: 80px;
-    margin-left: 15%;
-    margin-bottom: -4%;
+    height: 70px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .logoImage {
