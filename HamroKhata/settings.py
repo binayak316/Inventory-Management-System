@@ -197,14 +197,14 @@ JAZZMIN_SETTINGS = {
     # - vertical_tabs
     # - collapsible
     # - carousel
-    "changeform_format": "carousel",
+    "changeform_format": "horizontal_tabs",
     # override change forms on a per modeladmin basis
     "changeform_format_overrides": {
 
         "auth.user": "collapsible",
         "auth.group": "vertical_tabs",
         "purchase_app.purchase" : "collapsible",
-        "sales_app.sales":"collapsible",
+        "sales_app.sales":"carousel",
          
          },
     # Add a language dropdown into the admin
@@ -222,8 +222,8 @@ JAZZMIN_UI_TWEAKS = {
     "body_small_text": False,
     "brand_small_text": False,
     "brand_colour": "navbar-lightblue",
-    "accent": "accent-orange",
-    "navbar": "navbar-lightblue navbar-dark",
+    "accent": "accent-navy",
+    "navbar": "navbar-white navbar-light",
     "no_navbar_border": False,
     "navbar_fixed": False,
     "layout_boxed": False,
@@ -236,12 +236,12 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-    "theme": "default",
+    "theme": "lumen",
     "dark_mode_theme": None,
     "button_classes": {
-        "primary": "btn-outline-primary",
+        "primary": "btn-outline-warning",
         "secondary": "btn-secondary",
-        "info": "btn-info",
+        "info": "btn-outline-info",
         "warning": "btn-outline-warning",
         "danger": "btn-outline-danger",
         "success": "btn-outline-success"
@@ -282,7 +282,7 @@ TEMPLATES = [
 ]
 
 AUTO_LOGOUT = {
-    'IDLE_TIME':timedelta(minutes = 1),
+    'IDLE_TIME':timedelta(minutes = 50),
     'REDIRECT_TO_LOGIN_IMMEDIATELY':True,
     'MESSAGE': 'The session has expired. Please login again to continue.',
 
