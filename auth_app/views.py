@@ -30,7 +30,7 @@ from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 
 
-
+# function for password validation
 
 
 def otp_generate():
@@ -92,9 +92,7 @@ def register_page(request):
     if not request.user.is_authenticated:
         if request.method == "POST":
             register_form  = MyUserForm(request.POST)
-            # print(request.POST)
             if register_form.is_valid():
-                # print(register_form)
                 user = register_form.save()
                 #this two down line save the otp to the otpmodel
                 otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
@@ -192,7 +190,6 @@ def password_reset_page(request , target): #target parameter is to handle the se
                         request.session['target'] = 'register'
                         return redirect(f'/check_otp/{user.id}')
                     
-                    # request.session['target'] = 'forgot' if target.lower().strip() == 'forgot' else 'register'
                         
                     
             else:
@@ -206,14 +203,13 @@ def password_reset_page(request , target): #target parameter is to handle the se
 # @login_required
 def password_reset_confirm_page(request):
     "function that calls the password and confirm password page to make a new password when the users forgot"
-    # user = MyUser.objects.get(email=request.POST.get('email'))
 
     if request.method == "POST":
         # print(request.data) #password1 ra password 2 auxa
 
         if 'hamrokhata_user_id' in  request.session:
-            user = MyUser.objects.get(id=request.session['hamrokhata_user_id'])
-            print(user)
+            user = MyUser.objects.get(id=request.session['hamrokhata_user_id']) #catching the session
+            # print(user)
             new_password1 = request.POST.get('new_password1')
             new_password2 = request.POST.get('new_password2')
             if new_password1 == new_password2:
@@ -232,7 +228,6 @@ def password_reset_confirm_page(request):
         else:
             messages.error(request, "something went wrong")
             return redirect('/password-reset/forgot')
-        # request.session['id'] = user_id
         
    
     return render(request, 'auth_app/password/password_reset_confirm.html',)
