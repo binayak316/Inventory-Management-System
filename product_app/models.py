@@ -17,8 +17,12 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def product_count(self):
+        return Product.objects.filter(category = self.id).count()
+
 
 class Product(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE )
     name = models.CharField(max_length=50)
     description = models.TextField()
     purchase_price = models.FloatField()
@@ -26,7 +30,7 @@ class Product(models.Model):
     type = models.CharField(max_length=50)
     sku = models.CharField( max_length=50, default=1000, blank=True, null=True)
     image = models.ImageField(upload_to='images/')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE )
+   
     current_stock = models.IntegerField(default=0, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
