@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import MyUserForm
 from django.contrib import messages
 from auth_app.models import MyUser
+from purchase_app.models import Purchase, PurchaseItem
+from product_app.models import Product, Category
 import math,random
 from .models import OtpModel
 # otp generate packages
@@ -12,6 +14,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from rest_framework import status
 from rest_framework.views import APIView
+from django.views.generic import TemplateView
 from rest_framework.response import Response
 from django.db.models import Q
 
@@ -21,7 +24,7 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
-
+from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
@@ -319,3 +322,15 @@ class UserLoginApi(GenericAPIView):
             return Response({'error' : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
             
 
+
+
+
+class ChartData(TemplateView):
+    permission_classes = [DjangoModelPermissions,IsAuthenticated]
+    template_name = 'auth_app/chart/index_chart.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['products'] = Product.objects.all()
+        context['categories'] = Category.objects.all()
+        return context

@@ -12,6 +12,7 @@ class MyUser(AbstractUser):
 
     phone = models.CharField(max_length=20, unique=True)
     position = models.CharField(max_length=15,choices=POSITION_CHOICES)
+    
 
     def __str__(self):
         return self.email

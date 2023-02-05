@@ -1,6 +1,6 @@
 from django.urls import path
 from auth_app import views
-from auth_app.views import UserRegistrationApi, UserLoginApi, CheckOtpApi
+from auth_app.views import UserRegistrationApi, UserLoginApi, CheckOtpApi, ChartData
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -21,6 +21,11 @@ urlpatterns = [
     # otp form
     path('check_otp/<int:user_id>', views.check_otp, name='check_otp'),
 
+
+    # charts
+    # path('chart-index/',views.chart_index, name="chart-index" ),
+    path('ChartData/', ChartData.as_view(), name="ChartData"),
+
     # auth_app api's
     path('api/register/', UserRegistrationApi.as_view(), name='register-api'),
     path('api/checkotp/', CheckOtpApi.as_view(), name="check-otp"),
@@ -30,6 +35,7 @@ urlpatterns = [
     
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
 
 
 
