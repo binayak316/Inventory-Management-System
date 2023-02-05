@@ -5,6 +5,7 @@ from .forms import MyUserForm
 from django.contrib import messages
 from auth_app.models import MyUser
 from purchase_app.models import Purchase, PurchaseItem
+from sales_app.models import Sales, SalesItem
 from product_app.models import Product, Category
 import math,random
 from .models import OtpModel
@@ -333,4 +334,6 @@ class ChartData(TemplateView):
         context = super().get_context_data(**kwargs)
         context['products'] = Product.objects.all()
         context['categories'] = Category.objects.all()
+        context['purchases'] = Purchase.objects.all()
+        context['sales'] = Sales.objects.all()
         return context
