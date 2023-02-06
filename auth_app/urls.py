@@ -18,6 +18,8 @@ urlpatterns = [
 
 
 
+
+
     # otp form
     path('check_otp/<int:user_id>', views.check_otp, name='check_otp'),
 
@@ -33,6 +35,7 @@ urlpatterns = [
     path('api/passwordreset/', PasswordResetApi.as_view(), name='passwordreset'),
     path('api/passwordresetconfirm/<int:user_id>/', PasswordResetConfirmApi.as_view(), name='passwordresetconfrim'),
     path('api/changepassword/', ChangePasswordApi.as_view(), name='changepassword'),
+
 
     # token for refresh and token generation
     

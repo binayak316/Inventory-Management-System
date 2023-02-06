@@ -1,0 +1,47 @@
+{% extends 'auth_app/base.html' %}
+{% load static %}
+
+{% block title %}Table{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'auth_app/css/table.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<table class="table mt-5">
+    <div class=" col-10 mt-5 d-flex justify-content-end">
+        <div class="justify-content-end">
+                <small>Total stocks: {{total}}</small>
+        </div>
+    </div>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">S.N</th>
+        <th scope="col">Name</th>
+        <th scope="col">Purchase_Price</th>
+        <th scope="col">Selling_price</th>
+        <th scope="col">SKU</th>
+        <th scope="col">Current_stock</th>
+        <th scope="col">Image</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+      <tr>
+        <th scope="row">{{ forloop.counter}}</th>
+        <td>{{item.name}}</td>
+        <td>{{item.purchase_price}}</td>
+        <td>{{item.selling_price}}</td>
+        <td>{{item.sku}}</td>
+        <td>{{item.current_stock}}</td>
+        <td><img src="{{ item.imageURL }}" height="100" width="100" alt=""></td>
+        
+      </tr>
+      
+      {% endfor %}
+      
+    </tbody>
+  </table>
+  
+  
+{% endblock %}

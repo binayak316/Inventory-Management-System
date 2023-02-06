@@ -14,8 +14,9 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMi
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication, JWTStatelessUserAuthentication
+from django.views.generic import TemplateView
 
-
+from django.db.models import Sum
 
 from product_app import views
 # Create your views here.
@@ -91,20 +92,7 @@ class ProductAPI(GenericAPIView):
                 'error' : "You don't have permissions "
             }, status=status.HTTP_400_BAD_REQUEST)
     
-    # def search(self, request, *args, **kwargs):
-    #     """It defines a generic API view that defines the products."""
-    #     search_query = request.query_params.get('q', None)
-    #     if search_query:
-    #         products = Product.objects.filter(Q(name__contains = search_query) | Q(description__contiains= search_query))
-    #         if products.exists():
-    #             serializer = ProductSerializer(products, many=True)
-    #             return Response(serializer.data)
-    #         else:
-    #             return Response({'message':'Product not found'}, status=status.HTTP_404_NOT_FOUND)
-    #     else:
-    #         return Response({'message':'Please provide a valid search'}, status=status.HTTP_400_BAD_REQUEST)
-
-    
+ 
 
     def post(self, request, *args, **kwargs):
         serializer = ProductSerializer(data=request.data)
@@ -140,6 +128,24 @@ class ProductAPI(GenericAPIView):
         return Response({'msg':'Product is deleted'},status = status.HTTP_200_OK)
         
 
+
+
+
+def tables_products(request):
+    """function that displays all the objects of the products"""
+    if request.user.is_authenticated:
+        items = Product.objects.all()
+        total = Product.objects.aggregate(TOTAL = Sum('current_stock'))['TOTAL']
+
+        dict = {
+            'items':items,
+            'total':total,
+
+        }
+        return render(request, 'auth_app/chart/tables.html',dict)
+    else:
+        return redirect('/login/')
+  
 
 
 

@@ -59,6 +59,15 @@ class Product(models.Model):
             else:
                 self.sku = 1000
         super().save()        
+    
+    @property
+    def imageURL(self):
+        try:
+            url= self.image.url
+        except:
+            url= ''
+        return url
+    
 
     def __str__(self):
         return self.name +" " + str(f"sku:{self.sku}") 
