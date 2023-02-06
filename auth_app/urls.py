@@ -1,6 +1,6 @@
 from django.urls import path
 from auth_app import views
-from auth_app.views import UserRegistrationApi, UserLoginApi, CheckOtpApi, ChartData
+from auth_app.views import UserRegistrationApi, UserLoginApi, CheckOtpApi, ChartData, PasswordResetApi,PasswordResetConfirmApi, ChangePasswordApi
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -30,6 +30,9 @@ urlpatterns = [
     path('api/register/', UserRegistrationApi.as_view(), name='register-api'),
     path('api/checkotp/', CheckOtpApi.as_view(), name="check-otp"),
     path('api/login/', UserLoginApi.as_view(), name='login-api'),
+    path('api/passwordreset/', PasswordResetApi.as_view(), name='passwordreset'),
+    path('api/passwordresetconfirm/<int:user_id>/', PasswordResetConfirmApi.as_view(), name='passwordresetconfrim'),
+    path('api/changepassword/', ChangePasswordApi.as_view(), name='changepassword'),
 
     # token for refresh and token generation
     

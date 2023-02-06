@@ -53,7 +53,30 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = MyUser
         fields = ['email', 'password']
 
-# class CheckOtpSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = OtpModel
-#         fields = ['id','myuser','otp']
+# if you do not having a model and you only need a field 
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(required = True)
+    confirm_password  = serializers.CharField(required = True)
+
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError("password must be matched")
+        return data
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """serializer for password change """
+    model = MyUser
+
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    new_confirm_password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['new_confirm_password']:
+            raise serializers.ValidationError("New password's must be matched")
+        return data
+
