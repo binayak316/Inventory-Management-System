@@ -16,10 +16,11 @@ from django.core.mail import EmailMessage
 from rest_framework import status
 from rest_framework.views import APIView
 from django.views.generic import TemplateView
+from rest_framework import generics
 from rest_framework.response import Response
 from django.db.models import Q
 
-from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckOtpSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckOtpSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer, ChangePasswordSerializer
 from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth.decorators import login_required
@@ -363,6 +364,38 @@ class PasswordResetConfirmApi(GenericAPIView):
             user.save()
             return Response({'message':"Password reset successfully"})
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordApi(generics.UpdateAPIView):
+    """
+    An endpoint for chaging password
+    """
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [ IsAuthenticated]
+
+    def get_object(self,queryset=None):
+        obj = self.request.user
+        # user ko sab data aaye yo function ma
+        print(obj)
+        return obj
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data = request.data)
+        if serializer.is_valid():
+            # check old pw
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password":"wrong password"},status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response ={
+                'status':'success',
+                'code':status.HTTP_200_OK,
+                'message':'Password Updated Successfully',
+                'data':[]
+            }
+            return Response(response)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
        
 class ChartData(LoginRequiredMixin,TemplateView):
