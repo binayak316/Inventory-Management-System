@@ -57,6 +57,7 @@
 
 </script>
 <!-- pie chart ends -->
+<!-- radaer chart starts for purchase and sales -->
 <script>
     
     $(document).ready(function(){
@@ -114,6 +115,50 @@
         })
     });
 </script>
+<!-- radar chart ends for purchase and sales -->
+
+<!-- bar graph starts for customer and vendor  -->
+<script>
+    $(document).ready(function(){
+        var barChart = document.getElementById("bar_chart").getContext('2d');
+        var bar_chart = new Chart(barChart,{
+            type:'bar',
+            data: {
+                label: 'Inventory',
+                datasets:[
+                    {   
+                        label : 'customer ',
+                        data :[10,0],
+                        fill: true,
+                        backgroundColor: '#0000FF'  ,
+                        borderColor: 'rgb(255, 99, 132)',
+                    },
+                    {
+                        label: 'vendor',
+                        data: [11, 11],
+                        fill: true,
+                        backgroundColor: '#FF0000',
+                        borderColor: 'rgb(54, 162, 235)',
+                        
+                    }
+                        
+                ],
+                borderWidth: 5
+            },
+            options :{
+                scales :{
+                    y:{
+                        beginAtZero:true,
+                        max:50, 
+                        
+
+                    }
+                }
+            }
+        })
+    })
+</script>
+<!-- bar graph ends for customer and vendor  -->
 {%endblock scripts%}
 
 
@@ -135,6 +180,15 @@
             <small>purchase and sales chart</small>
             <canvas id="Radar_chart" width="300" height="100 "></canvas>
 
+
+        </div>
+    </div>
+</div>
+<div class="col-12 mt-5">
+    <div class="col-10 mx-5">
+        <div style="border: 1px solid black;">
+            <small>customer and vendor chart</small>
+            <canvas id="bar_chart" ></canvas>
 
         </div>
     </div>

@@ -23,6 +23,7 @@ from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckO
 from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
@@ -325,8 +326,7 @@ class UserLoginApi(GenericAPIView):
 
 
 
-
-class ChartData(TemplateView):
+class ChartData(LoginRequiredMixin,TemplateView):
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     template_name = 'auth_app/chart/index_chart.html'
     
