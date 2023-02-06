@@ -28,7 +28,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
-from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordResetForm
+
+
+
+
 from django.contrib.auth import update_session_auth_hash
 
 # from renderers import UserRenderers
