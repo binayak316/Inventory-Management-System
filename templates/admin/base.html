@@ -191,13 +191,16 @@
                 <div class="sidebar">
                     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                         <div class="image">
-                            {% if jazzmin_settings|has_jazzmin_setting:"user_avatar" %}
-                                <img src="{% get_user_avatar request.user %}" width="160px" class="img-circle elevation-2" alt="User Image">
+                            {% comment %} <img src=" {% static 'images/aadmin.jpg' %}"  class="img-circle elevation-2 " alt="User Image"  style="height:50px;width:50px;object-fit: cover;margin-left: -10px;"> {% endcomment %}
+
+                         {% if jazzmin_settings|has_jazzmin_setting:"user_avatar" %}
+                               <img src="{% get_user_avatar request.user %}" width="160px" class="img-circle elevation-2" alt="User Image"> 
+
                             {% else %}
                                 <i class="fas fa-inverse user-profile fa-user-circle"></i>
                             {% endif %}
                         </div>
-                        <div class="info">
+                        <div class="info ">
                             {% if perms|can_view_self %}
                             <!-- change the user's username after email -->
                                 <a href="{% jazzy_admin_url request.user request.current_app|default:"admin" %}" class="d-block">{{ request.user.username }}</a>

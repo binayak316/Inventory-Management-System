@@ -19,7 +19,7 @@ from django.views.generic import TemplateView
 from rest_framework.response import Response
 from django.db.models import Q
 
-from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckOtpSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckOtpSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
 from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth.decorators import login_required
@@ -204,8 +204,7 @@ def password_reset_page(request , target): #target parameter is to handle the se
         
     return render(request, 'auth_app/password/password_reset.html', {'form':PasswordResetForm()})
 
-# @user_not_authenticated
-# @login_required
+
 def password_reset_confirm_page(request):
     "function that calls the password and confirm password page to make a new password when the users forgot"
 
@@ -270,13 +269,14 @@ class CheckOtpApi(GenericAPIView):
         serializer = CheckOtpSerializer(data=request.data)
         if serializer.is_valid():
             user_id = request.data.get('user_id') 
-            print(user_id)
+            # print(user_id)
             user = MyUser.objects.get(id=user_id)
             user_otp = serializer.data.get('otp')
             stored_otp = OtpModel.objects.filter(myuser=user, otp=user_otp).order_by('created_at').first()
             if stored_otp:
                 if str(user_otp) == str(stored_otp.otp):
                     return Response({
+                        # 'user_id':user_id,
                         'status': 'success',
                         'message': 'OTP is valid'})
                 else:
@@ -287,7 +287,7 @@ class CheckOtpApi(GenericAPIView):
             else:
                 return Response({
                     'status': 'error',
-                    'message': 'OTP is Expired'
+                    'message': "OTP didn't match "
                     })
         else:
             return Response({
@@ -322,10 +322,49 @@ class UserLoginApi(GenericAPIView):
         
         else:
             return Response({'error' : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+class PasswordResetApi(GenericAPIView):
+    """ API where user puts their email to get otp and redirect to the password and set password page"""
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request, format=None):
+        serializer = self.get_serializer(data = request.data)
+        # print(serializer.initial_data)
+        if serializer.is_valid():
+            # extracting email from serializer.is_valid()
+            email = serializer.validated_data['email'] # this retrives the email from validated data returned by serializer (api bata aako email validate garne)
+            try:
+                user = MyUser.objects.get(email=email)
+            except MyUser.DoesNotExist:
+                return Response({'error':'User with the given email doesnot exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+            otp = otp_generate()
+            otp_instance = OtpModel(myuser = user, otp=otp, created_at = datetime.now())
+            otp_instance.save()
+
+            send_mail(otp, email)
+            return Response({'status':'OTP sent successfully to the given email'})
+
+        return Response({"error":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+
+class PasswordResetConfirmApi(GenericAPIView):
+    """API where user confirms their password by putting password and confirm password"""
+    serializer_class = PasswordResetConfirmSerializer
+    def post(self, request,user_id, format=None):
+        user = MyUser.objects.filter(id=user_id).first()
+        if user is None:
+            return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
             
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            # this below line validates the incoming password from the serializer
+            password = serializer.validated_data['password']
+            user.set_password(password)
+            user.save()
+            return Response({'message':"Password reset successfully"})
+        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
+       
 class ChartData(LoginRequiredMixin,TemplateView):
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     template_name = 'auth_app/chart/index_chart.html'
