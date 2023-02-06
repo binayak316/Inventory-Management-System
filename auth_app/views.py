@@ -5,6 +5,7 @@ from .forms import MyUserForm
 from django.contrib import messages
 from auth_app.models import MyUser
 from purchase_app.models import Purchase, PurchaseItem
+from sales_app.models import Sales, SalesItem
 from product_app.models import Product, Category
 import math,random
 from .models import OtpModel
@@ -22,6 +23,7 @@ from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckO
 from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
@@ -324,8 +326,7 @@ class UserLoginApi(GenericAPIView):
 
 
 
-
-class ChartData(TemplateView):
+class ChartData(LoginRequiredMixin,TemplateView):
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
     template_name = 'auth_app/chart/index_chart.html'
     
@@ -333,4 +334,6 @@ class ChartData(TemplateView):
         context = super().get_context_data(**kwargs)
         context['products'] = Product.objects.all()
         context['categories'] = Category.objects.all()
+        context['purchases'] = Purchase.objects.all()
+        context['sales'] = Sales.objects.all()
         return context
