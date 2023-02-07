@@ -4,6 +4,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from django.contrib.auth.models import Permission
 from rest_framework import status
+from django.db.models import Q
 from .serializers import PurchaseSerializer,PurchaseItemSerializer
 from .models import Purchase, PurchaseItem
 from rest_framework.permissions import IsAuthenticated,DjangoModelPermissions
@@ -29,6 +30,19 @@ class PurchaseAPI(GenericAPIView):
                 serializer = PurchaseSerializer(purchase)
                 return Response(serializer.data)
             purchases = Purchase.objects.all()
+
+            if request.GET.get('vendor'):
+                search = str(request.GET.get('vendor'))
+                pur_order = Purchase.objects.all().filter(Q(vendor__name__contains=search) | Q(status__contains=search))
+                if not pur_order:
+                    return Response({'message':'Not Found'})
+                serializer = PurchaseSerializer(pur_order, many=True)
+                return Response({
+                    'msg':'Order you are looking for ',
+                    'status':status.HTTP_200_OK,
+                    'data':serializer.data,
+
+                },status = status.HTTP_200_OK)
             serializer = PurchaseSerializer(purchases, many=True)
             return Response(serializer.data)
         else:

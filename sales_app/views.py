@@ -6,6 +6,7 @@ from rest_framework.generics import GenericAPIView
 from .serializers import SalesItemSerializer, SalesSerializer
 from django.contrib.auth.models import Permission
 from .models import SalesItem, Sales
+from django.db.models import Q
 from product_app.models import Product
 
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
@@ -31,6 +32,17 @@ class SalesAPI(GenericAPIView):
                 serializer = SalesSerializer(sell)
                 return Response(serializer.data)
             sell = Sales.objects.all()
+
+            if request.GET.get('customer'):
+                search = request.GET.get('customer')
+                sale_order = Sales.objects.all().filter(Q(customer__name__contains=search))
+                if not sale_order:
+                    return Response({'message': 'Not Found'})
+                serializer = SalesSerializer(sale_order, many=True)
+                return Response({
+                    'msg':'Order you are looking for',
+                    'data':serializer.data
+                },status = status.HTTP_200_OK)
             serializer = SalesSerializer(sell, many=True)
             return Response(serializer.data)
         else:
