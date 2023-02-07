@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/productlist/', views.ProductAPI.as_view(), name="product-list"),
     path('api/product/<int:pk>',views.ProductAPI.as_view(), name="product-id"),
 
-
+# for frontend
     path('tables/', views.tables_products, name="tables"),
 
 ]

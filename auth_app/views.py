@@ -334,7 +334,7 @@ class PasswordResetApi(GenericAPIView):
 
     def post(self, request, format=None):
         serializer = self.get_serializer(data = request.data)
-        # print(serializer.initial_data)
+        # print(serializer.initial_data) #this prints the email
         if serializer.is_valid():
             # extracting email from serializer.is_valid()
             email = serializer.validated_data['email'] # this retrives the email from validated data returned by serializer (api bata aako email validate garne)
