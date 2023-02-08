@@ -20,7 +20,7 @@ class PurchaseItemInline(admin.TabularInline):
 
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items','bill_number','vendor', 'status']
+    list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items','bill_number','vendor', 'status', 'purchased_by']
     # search_fields = ['vendor']
     search_fields = [ 'vendor__name', 'bill_number'] 
     list_filter = ('status',)

@@ -1,6 +1,7 @@
 from django.db import models
 from product_app.models import Product
 from third_party.models import Customer
+from auth_app.models import MyUser
 
 from django.shortcuts import reverse
 # Create your models here.
@@ -47,6 +48,8 @@ class Sales(models.Model):
     discount_amount = models.FloatField(null=True, blank=True)
     disc_percent = models.FloatField(blank=True, default=0.0)
     tax_percent = models.FloatField( blank=True, default=0.0)
+
+    sales_by = models.ForeignKey(MyUser, on_delete=models.SET_NULL, null=True)
 
 
     
