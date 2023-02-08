@@ -9,5 +9,8 @@ urlpatterns = [
     # purchaseitem
     path('api/purchaseitem/', views.PurchaseItemAPI.as_view(), name="purchaseItem"),
     path('api/purchaseitem/<int:pk>', views.PurchaseItemAPI.as_view(), name="purchaseItem-individually"),
+
+    # frontend
+    path("purchase_sales_tables/", views.purchase_table, name='purchase_table'),
     
 ]

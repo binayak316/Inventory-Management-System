@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render ,redirect
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -103,4 +103,15 @@ class PurchaseItemAPI(GenericAPIView):
             return Response({'msg':'PurchaseItem is created'}, status = status.HTTP_200_OK)
         return Response({'error':serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
-    
+
+def purchase_table(request):
+    if request.user.is_authenticated:
+        purchases = Purchase.objects.all()
+        # for purchase in purchases:
+        #     print(purchase.purchase_items.all())
+        context = {
+            'purchases':purchases,
+        }
+        return render(request, 'auth_app/chart/purchase_sales_table.html',context)
+    else:
+        return redirect('/login/')
