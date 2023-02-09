@@ -173,6 +173,9 @@ def logout_page(request):
     logout(request)
     return redirect('login-page')
 
+# def logout_view(request):
+#     logout(request)
+#     return JsonResponse({'result': 'success'})
 
 
 def password_reset_page(request , target): #target parameter is to handle the sessions for 2 mechanishm (forget pw and login process)
@@ -403,8 +406,10 @@ class ChangePasswordApi(generics.UpdateAPIView):
 
        
 class ChartData(LoginRequiredMixin,TemplateView):
+    """Class that shows the chart for the products categories(pie) and sales also purchases(radar)"""
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
-    template_name = 'auth_app/chart/index_chart.html'
+    # template_name = 'auth_app/chart/index_chart.html'
+    template_name = 'auth_app/chart/categories_products.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

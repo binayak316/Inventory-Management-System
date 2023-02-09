@@ -1,6 +1,7 @@
 from django.db import models
 from product_app.models import Product
 from third_party.models import Vendor
+from auth_app.models import MyUser
 # Create your models here.
 
 
@@ -49,6 +50,7 @@ class Purchase(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    purchased_by = models.ForeignKey(MyUser, on_delete=models.SET_NULL,null=True)
 
     class Meta:
         ordering = ('created_at',)

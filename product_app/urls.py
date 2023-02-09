@@ -10,6 +10,6 @@ urlpatterns = [
     path('api/product/<int:pk>',views.ProductAPI.as_view(), name="product-id"),
 
 # for frontend
-    path('tables/', views.tables_products, name="tables"),
+    # path('tables/', views.tables_products, name="tables"),
 
 ]

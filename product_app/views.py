@@ -130,22 +130,3 @@ class ProductAPI(GenericAPIView):
 
 
 
-
-def tables_products(request):
-    """function that displays all the objects of the products"""
-    if request.user.is_authenticated:
-        items = Product.objects.all()
-        total = Product.objects.aggregate(TOTAL = Sum('current_stock'))['TOTAL']
-
-        dict = {
-            'items':items,
-            'total':total,
-
-        }
-        return render(request, 'auth_app/chart/tables.html',dict)
-    else:
-        return redirect('/login/')
-  
-
-
-

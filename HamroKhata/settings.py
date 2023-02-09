@@ -102,7 +102,7 @@ JAZZMIN_SETTINGS = {
 
         # external url that opens in a new window (Permissions can be added)
         {"name": "Purchase/Sales", "url": "/ChartData/", "new_window": True},
-        {"name": "Products ", "url": "/tables/", "new_window": True},
+        {"name": "Products/Categories", "url": "/ChartData/", "new_window": True},
         {"name": "Vendor/Customer", "url": "/tables/", "new_window": True},
 
         # model admin to link to (Permissions checked against model)
