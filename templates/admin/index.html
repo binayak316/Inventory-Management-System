@@ -53,7 +53,7 @@
                  <div class=" col-6 mb-1" style="padding:10px;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;">
                      <div id="chart1"> 
                          <small>bar for vendor and customer</small>
-                         <canvas id="bar_chart" width="300" height="100 "></canvas>
+                         <canvas id="bar_chart" width="800" height="400 "></canvas>
 
                      </div>
              </div>
@@ -62,7 +62,7 @@
              <div class=" col-6 mb-1" style="padding:10px;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;">
                      <div id="chart1"> 
                          <small>line for performance</small>
-                         <canvas id="" width="300" height="100 "></canvas>
+                         <canvas id="" width="800" height="400 "></canvas>
                      </div>
                  </div>
             </div>
@@ -76,7 +76,8 @@
             </div> -->
             <div class="col-md-6 col-sm-12">
                 {% for app in dashboard_list %}
-                    <div class="card">
+                <!-- this is the dashboard tables provided by django by itself  don't change it -->
+                    <!-- <div class="card">
                         <div class="card-header">
                             <h5 class="m-0">{{ app.name }}</h5>
                         </div>
@@ -108,7 +109,8 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> -->
+                    <!--  this is the dashboard tables provided by django by itself  don't change it-->
 
                     {% if forloop.counter == middle|add:"0" %}
                     </div>
