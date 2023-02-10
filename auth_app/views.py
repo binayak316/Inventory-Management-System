@@ -29,7 +29,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from django.contrib.auth.forms import PasswordResetForm
-
+from django.http import JsonResponse
 
 
 
@@ -408,8 +408,9 @@ class ChangePasswordApi(generics.UpdateAPIView):
 class ChartData(LoginRequiredMixin,TemplateView):
     """Class that shows the chart for the products categories(pie) and sales also purchases(radar)"""
     permission_classes = [DjangoModelPermissions,IsAuthenticated]
-    # template_name = 'auth_app/chart/index_chart.html'
-    template_name = 'auth_app/chart/categories_products.html'
+    # template_name = 'auth_app/chart/categories_products.html'
+
+    # template_name = 'auth_app/chart/piechart.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -418,3 +419,28 @@ class ChartData(LoginRequiredMixin,TemplateView):
         context['purchases'] = Purchase.objects.all()
         context['sales'] = Sales.objects.all()
         return context
+
+
+
+
+def pie_chart(request):
+    """function that shows the pie chart"""
+    categories = Category.objects.all()
+    
+    data = []
+    labels = []
+    product_count = []
+
+    for category in categories:
+        labels.append(category.name)
+        product_count.append(category.product_count())
+
+    data.append({
+        'labels' : labels,
+        'product_count' : product_count
+    })
+    return JsonResponse(data, safe=False)
+
+
+def radar_chart(request):
+    return JsonResponse("hy")

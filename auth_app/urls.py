@@ -1,6 +1,6 @@
 from django.urls import path
 from auth_app import views
-from auth_app.views import UserRegistrationApi, UserLoginApi, CheckOtpApi, ChartData, PasswordResetApi,PasswordResetConfirmApi, ChangePasswordApi
+from auth_app.views import UserRegistrationApi, UserLoginApi, CheckOtpApi, PasswordResetApi,PasswordResetConfirmApi, ChangePasswordApi
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -32,8 +32,9 @@ urlpatterns = [
     
 
     # charts
-    path('ChartData/', ChartData.as_view(), name="ChartData"),# shows the categories and products chart
-
+    # path('ChartData/', ChartData.as_view(), name="ChartData"),# shows the categories and products chart
+    path('bar/', views.pie_chart, name="bar"),
+    path('radar/', views.radar_chart, name='radar'),
 
     
 
