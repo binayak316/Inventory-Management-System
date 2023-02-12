@@ -33,7 +33,7 @@ urlpatterns = [
 
     # charts
     # path('ChartData/', ChartData.as_view(), name="ChartData"),# shows the categories and products chart
-    path('bar/', views.pie_chart, name="bar"),
+    path('pie/', views.pie_chart, name="pie"),
     path('radar/', views.radar_chart, name='radar'),
 
     

@@ -268,7 +268,7 @@ class UserRegistrationApi(GenericAPIView):
             otp = OtpModel(myuser=user, otp=otp_generate(), created_at=datetime.now())
             otp.save()
             send_mail(otp.otp,user.email)
-            return Response ({'msg':'Registration is success please verify your OTP to login'}, status=status.HTTP_200_OK)
+            return Response ({'msg':'Registration is success please verify your OTP to login', 'user_id':user.id,}, status=status.HTTP_200_OK)
         return Response({"error":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
 class CheckOtpApi(GenericAPIView):
@@ -351,7 +351,7 @@ class PasswordResetApi(GenericAPIView):
             otp_instance.save()
 
             send_mail(otp, email)
-            return Response({'status':'OTP sent successfully to the given email'})
+            return Response({'status':'OTP sent successfully to the given email',  'user_id':user.id,}, status=status.HTTP_200_OK)
 
         return Response({"error":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
@@ -405,23 +405,6 @@ class ChangePasswordApi(generics.UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
        
-class ChartData(LoginRequiredMixin,TemplateView):
-    """Class that shows the chart for the products categories(pie) and sales also purchases(radar)"""
-    permission_classes = [DjangoModelPermissions,IsAuthenticated]
-    # template_name = 'auth_app/chart/categories_products.html'
-
-    # template_name = 'auth_app/chart/piechart.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['products'] = Product.objects.all()
-        context['categories'] = Category.objects.all()
-        context['purchases'] = Purchase.objects.all()
-        context['sales'] = Sales.objects.all()
-        return context
-
-
-
 
 def pie_chart(request):
     """function that shows the pie chart"""

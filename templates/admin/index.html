@@ -22,6 +22,7 @@
 
 
   <div class="col-lg-9 col-12">
+  
         <div class="row">
            <div class="container col-12 mb-2 " style="gap:5px;">
 
@@ -185,11 +186,12 @@
         </div>
     </div>
 
+    <!-- pie chart starts -->
     <script>
         $(document).ready(function(){
             $.ajax({
                 method : "GET",
-                url : "/bar",
+                url : "/pie",
                 success : function(data){
                     console.log(data)
                     console.log(data[0].labels, data[0].product_count)
@@ -219,6 +221,7 @@
             })
         })
     </script>
+    <!-- pie chart ends -->
 
 <!-- radar chart for purchase and sales starts -->
 <script>
