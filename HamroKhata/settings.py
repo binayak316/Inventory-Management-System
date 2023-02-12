@@ -101,9 +101,8 @@ JAZZMIN_SETTINGS = {
         {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
 
         # external url that opens in a new window (Permissions can be added)
-        {"name": "Purchase/Sales", "url": "/ChartData/", "new_window": True},
-        {"name": "Products/Categories", "url": "/ChartData/", "new_window": True},
-        {"name": "Vendor/Customer", "url": "/tables/", "new_window": True},
+        
+        {"name": "Contact", "url": "", "new_window": True},
 
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User"},
@@ -368,17 +367,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS':True,  #rotate_refresh_tokens lai false banaune vane (access + refresh) dubai tokens painxa
     'ALGORITHM' : 'HS256',
     'AUTH_HEADER_TYPES': ('Bearer','JWT'),
-    # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    # 'USER_ID_FIELD': 'id',
-    # 'USER_ID_CLAIM': 'user_id',
-    # 'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-
-    # 'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    # 'TOKEN_TYPE_CLAIM': 'token_type',
-    # 'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
-
-    # 'JTI_CLAIM': 'jti',
-
+    
 }
 
 REST_FRAMEWORK = {
