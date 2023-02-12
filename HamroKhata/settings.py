@@ -124,6 +124,7 @@ JAZZMIN_SETTINGS = {
     #############
     # Side Menu  starts #
     #############
+    # python manage.py runserver 192.168.1.74:2112
 
     # Whether to display the side menu
     "show_sidebar": True,
