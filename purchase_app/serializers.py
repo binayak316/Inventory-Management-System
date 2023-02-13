@@ -6,7 +6,9 @@ from third_party.serializers import VendorSpecificSerializer
 
 
 class PurchaseItemSerializer(serializers.ModelSerializer):
-    product = ProductSpecificSerializer()
+    # product = ProductSpecificSerializer()
+    product_name = serializers.StringRelatedField(source='product.name', read_only=True)
+    purchase_price = serializers.StringRelatedField(source='product.purchase_price', read_only=True)
 
     class Meta:
         model = PurchaseItem
@@ -16,7 +18,9 @@ class PurchaseItemSerializer(serializers.ModelSerializer):
 class PurchaseSerializer(WritableNestedModelSerializer ,serializers.ModelSerializer):
     purchase_by_name = serializers.StringRelatedField(source='purchased_by.username', read_only=True)
     purchase_items = PurchaseItemSerializer(many=True)
-    vendor = VendorSpecificSerializer()
+    # vendor = VendorSpecificSerializer()
+    vendor = serializers.StringRelatedField(source='vendor.name', read_only=True)
+
     class Meta:
         model = Purchase
         fields = '__all__'
