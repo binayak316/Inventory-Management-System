@@ -11,7 +11,7 @@ class ProductSpecificSerializer(serializers.ModelSerializer):
     """This is the serializer to retrive specific field from the productapi"""
     class Meta:
         model = Product
-        fields = ('id','name','description','purchase_price','selling_price','category')
+        fields = ('id','name','description','purchase_price','category')
 
 
 
