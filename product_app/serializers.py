@@ -7,6 +7,12 @@ class ProductSerializer(serializers.ModelSerializer):
         model= Product
         fields = '__all__'
         # exclude = ['sku']
+class ProductSpecificSerializer(serializers.ModelSerializer):
+    """This is the serializer to retrive specific field from the productapi"""
+    class Meta:
+        model = Product
+        fields = ('id','name','description','purchase_price','selling_price','category')
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
