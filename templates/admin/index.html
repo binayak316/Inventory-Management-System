@@ -7,116 +7,136 @@
 {% block content_title %} {% trans 'Dashboard' %} {% endblock %}
 
 {% block breadcrumbs %}
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-    <li class="breadcrumb-item">{% trans 'Dashboard' %}</li>
-</ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Dashboard' %}</li>
+    </ol>
 {% endblock %}
 
 
 {% block content %}
-{% get_side_menu using="app_list" as dashboard_list %}
-{% if dashboard_list %}
-{% widthratio dashboard_list|length 2 1 as middle %}
-{% endif %}
+    {% get_side_menu using="app_list" as dashboard_list %}
+    {% if dashboard_list %}
+        {% widthratio dashboard_list|length 2 1 as middle %}
+    {% endif %}
 
 
-<div class="col-lg-9 col-12">
+  <div class="col-lg-9 col-12">
+  <!-- bootstrap date range starts -->
 
-    <div class="row">
+  <div class="container mt-5 col-12 d-flex" style="padding:10px;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;">
+    <form action="/show_purchase_report/" method="POST" id="purchase_report_form">
+        {% csrf_token %}
 
-        <div class="">
-            <div class="d-flex">
-                <div class="accordion col-6" id="accordionExample1">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#aaa" aria-expanded="true" aria-controls="aaa">
-                                Pie Chart
-                            </button>
-                        </h2>
-                        <div id="aaa" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                            data-bs-parent="#accordionExample1">
-                            <div class="accordion-body">
-                                <small>pie</small>
-                                <canvas id="myChart" width="800" height="700"></canvas>
+       <div class="col-12 d-flex" style="gap:10px;">
+            <div class="one">
+                <label for="">Start Date</label>
+                <input type="date" name="start" placeholder="start_date" id="start " class="form-control date">
+            </div> 
+            <div class="two">
+                
+                <label for="end_date">End Date</label>
+                <input type="date" name="end" placeholder="end_date" id="end" class="form-control date">
+
+            </div>
+            
+            <div id="download"  ></div>
+       </div> <br>
+       <div class=" d-flex justify-content-center" style="margin-left:10px;">
+        <input id="submit" type="submit" value="Create purchase Report" class="btn  btn-outline-dark col-7 "  >
+      </div>
+       
+    </form>
+
+   
+
+</div>
+
+<!-- bootstrap date range ends -->
+        <div class="row">
+            <div class="">
+                <div class="d-flex">
+                    <div class="accordion col-6" id="accordionExample1">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#aaa" aria-expanded="true" aria-controls="aaa">
+                                    Pie Chart
+                                </button>
+                            </h2>
+                            <div id="aaa" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                data-bs-parent="#accordionExample1">
+                                <div class="accordion-body">
+                                    <small>pie</small>
+                                    <canvas id="myChart" width="800" height="700"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="accordion col-6" id="accordionExample2">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#bbb" aria-expanded="true" aria-controls="bbb">
+                                    Radar Chart
+                                </button>
+                            </h2>
+                            <div id="bbb" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                data-bs-parent="#accordionExample2">
+                                <div class="accordion-body">
+                                    <small>radar</small>
+                                    <canvas id="Radar_chart" width="800" height="700 "></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="accordion col-6" id="accordionExample2">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#bbb" aria-expanded="true" aria-controls="bbb">
-                                Radar Chart
-                            </button>
-                        </h2>
-                        <div id="bbb" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                            data-bs-parent="#accordionExample2">
-                            <div class="accordion-body">
-                                <small>radar</small>
-                                <canvas id="Radar_chart" width="800" height="700 "></canvas>
+    
+    
+                <div class="d-flex mt-2">
+                    <div class="accordion col-6" id="accordionExample1">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#ccc" aria-expanded="true" aria-controls="ccc">
+                                    Bar Diagram
+                                </button>
+                            </h2>
+                            <div id="ccc" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                                data-bs-parent="#accordionExample1">
+                                <div class="accordion-body">
+                                    <small>bar for vendor and customer</small>
+                                    <canvas id="bar_chart" width="800" height="700 "></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="accordion col-6" id="accordionExample2">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#ddd" aria-expanded="true" aria-controls="ddd">
+                                    Line Diagram
+                                </button>
+                            </h2>
+                            <div id="ddd" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                                data-bs-parent="#accordionExample2">
+                                <div class="accordion-body">
+                                    <small>line for performance</small>
+                                    <canvas id="" width="800" height="700 "></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
-            <div class="d-flex mt-2">
-                <div class="accordion col-6" id="accordionExample1">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#ccc" aria-expanded="true" aria-controls="ccc">
-                                Bar Diagram
-                            </button>
-                        </h2>
-                        <div id="ccc" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                            data-bs-parent="#accordionExample1">
-                            <div class="accordion-body">
-                                <small>bar for vendor and customer</small>
-                                <canvas id="bar_chart" width="800" height="700 "></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion col-6" id="accordionExample2">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFour">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#ddd" aria-expanded="true" aria-controls="ddd">
-                                Line Diagram
-                            </button>
-                        </h2>
-                        <div id="ddd" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                            data-bs-parent="#accordionExample2">
-                            <div class="accordion-body">
-                                <small>line for performance</small>
-                                <canvas id="" width="800" height="700 "></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-        <div class="col-md-6 col-sm-12">
-            {% for app in dashboard_list %}
-            <!-- this is the dashboard tables provided by django by itself  don't change it -->
-            <!-- <div class="card">
+    
+            <div class="col-md-6 col-sm-12">
+                {% for app in dashboard_list %}
+                <!-- this is the dashboard tables provided by django by itself  don't change it -->
+                    <!-- <div class="card">
                         <div class="card-header">
                             <h5 class="m-0">{{ app.name }}</h5>
                         </div>
@@ -149,141 +169,142 @@
                             </table>
                         </div>
                     </div> -->
-            <!--  this is the dashboard tables provided by django by itself  don't change it-->
 
-            {% if forloop.counter == middle|add:"0" %}
-        </div>
-        <div class="col-md-6 col-sm-12">
-            {% endif %}
+                    
+                    <!--  this is the dashboard tables provided by django by itself  don't change it-->
 
-            {% endfor %}
-        </div>
-    </div>
-
-</div>
-<div class="col-lg-3 col-12">
-    <div id="content-related">
-        <div class="module" id="recent-actions-module">
-            <h4 class="mb-3">{% trans 'Recent actions' %}</h4>
-            {% load log %}
-            {% get_admin_log 6 as admin_log for_user user %}
-            {% if not admin_log %}
-            <p>{% trans 'None available' %}</p>
-            {% else %}
-            <div class="timeline">
-                {% for entry in admin_log %}
-                <div>
-                    {% if entry.is_change %}
-                    <i class="fas fa-edit bg-gray text-xs"></i>
-                    {% elif entry.is_deletion %}
-                    <i class="fas fa-trash bg-danger text-xs"></i>
-                    {% elif entry.is_addition %}
-                    <i class="fas fa-plus-circle bg-success text-xs"></i>
+                    {% if forloop.counter == middle|add:"0" %}
+                    </div>
+                    <div class="col-md-6 col-sm-12">
                     {% endif %}
 
-                    <div class="timeline-item">
-                        <span class="time"><i class="fas fa-clock"></i>
-                            {% blocktrans with timesince=entry.action_time|timesince %}{{ timesince }}
-                            ago{% endblocktrans %}</span>
-                        <h3 class="timeline-header no-border">
-                            {% if entry.is_deletion or not entry.get_admin_url %}
-                            {{ entry.object_repr }}
-                            {% else %}
-                            <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
-                            {% endif %}
-
-                            {% if entry.model %}
-                            <span class="mini quiet">
-                                {% filter capfirst %}
-                                {{ entry.model }}
-                                {% endfilter %}
-                            </span>
-                            {% endif %}
-                        </h3>
-                        {% if not entry.is_deletion %}
-                        <div class="timeline-body">
-                            {% if entry.is_addition %}
-                            {{ entry }}
-                            {% else %}
-                            <ul style="list-style: none; padding: 0;">
-                                {% action_message_to_list entry as action_message_list %}
-                                {% for action_message in action_message_list %}
-                                <li>{{ action_message.msg|style_bold_first_word }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
                 {% endfor %}
-                <div>
-                    <i class="fa fa-clock bg-gray"></i>
                 </div>
+               
+        </div>
+
+    </div>
+    <div class="col-lg-3 col-12">
+        <div id="content-related">
+            <div class="module" id="recent-actions-module">
+                <h4 class="mb-3">{% trans 'Recent actions' %}</h4>
+                {% load log %}
+                {% get_admin_log 6 as admin_log for_user user %}
+                {% if not admin_log %}
+                    <p>{% trans 'None available' %}</p>
+                {% else %}
+                    <div class="timeline">
+                        {% for entry in admin_log %}
+                            <div>
+                                {% if entry.is_change %}
+                                    <i class="fas fa-edit bg-gray text-xs"></i>
+                                {% elif entry.is_deletion %}
+                                    <i class="fas fa-trash bg-danger text-xs"></i>
+                                {% elif entry.is_addition %}
+                                    <i class="fas fa-plus-circle bg-success text-xs"></i>
+                                {% endif %}
+
+                                <div class="timeline-item">
+                                    <span class="time"><i class="fas fa-clock"></i> {% blocktrans with timesince=entry.action_time|timesince %}{{ timesince }} ago{% endblocktrans %}</span>
+                                    <h3 class="timeline-header no-border">
+                                        {% if entry.is_deletion or not entry.get_admin_url %}
+                                            {{ entry.object_repr }}
+                                        {% else %}
+                                            <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                        {% endif %}
+
+                                        {% if entry.model %}
+                                            <span class="mini quiet">
+                                                {% filter capfirst %}
+                                                    {{ entry.model }}
+                                                {% endfilter %}
+                                            </span>
+                                        {% endif %}
+                                    </h3>
+                                    {% if not entry.is_deletion %}
+                                        <div class="timeline-body">
+                                            {% if entry.is_addition %}
+                                                {{ entry }}
+                                            {% else %}
+                                                <ul style="list-style: none; padding: 0;">
+                                                    {% action_message_to_list entry as action_message_list %}
+                                                    {% for action_message in action_message_list %}
+                                                        <li>{{ action_message.msg|style_bold_first_word }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div>
+                            <i class="fa fa-clock bg-gray"></i>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
-</div>
 
-<!-- pie chart starts -->
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            method: "GET",
-            url: "/pie",
-            success: function (data) {
-                // console.log(data)
-                // console.log(data[0].labels, data[0].product_count)
-                var ctx = document.getElementById('myChart').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: data[0].labels,
-                        datasets: [{
-                            label: 'My First Dataset',
-                            data: data[0].product_count,
-                            backgroundColor: [
+    <!-- pie chart starts -->
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                method : "GET",
+                url : "/pie",
+                success : function(data){
+                    // console.log(data)
+                    // console.log(data[0].labels, data[0].product_count)
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: data[0].labels,
+                            datasets: [{
+                                label: 'My First Dataset',
+                                data: data[0].product_count,
+                                backgroundColor: [
                                 'rgb(255, 99, 132)',
                                 'rgb(54, 162, 235)',
                                 'rgb(255, 205, 86)'
-                            ],
-                            borderWidth: 1,
-                            hoverOffset: 10,
-
-                        }]
-                    },
-                });
-            },
-            error: function (e) {
-                // console.log(e)
-            }
+                                ],
+                                borderWidth:1,
+                                hoverOffset: 10,
+                                
+                            }]
+                            }, 
+                    });
+                },
+                error: function(e){
+                    // console.log(e)
+                }
+            })
         })
-    })
-</script>
-<!-- pie chart ends -->
+    </script>
+    <!-- pie chart ends -->
 
 <!-- radar chart for purchase and sales starts -->
 <script>
-
-    $(document).ready(function () {
+    
+    $(document).ready(function(){
         // const DATA_COUNT = 12;
         // const NUMBER_CFG = {count:DATA_COUNT, min:0, max:100};
         // const labels  = Utils.months({count:12});
 
         var radar = document.getElementById('Radar_chart').getContext('2d');
         var Radar_chart = new Chart(radar, {
-            type: 'radar',
+            type:'radar',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'
-                    // {%for data in purchases%}
-                    // // '{{data.status.completed}}',
-                    // {% endfor %}
+                labels: [ 'Jan', 'Feb' , 'Mar' , 'Apr', 'May' , 'Jun' , 'Jul' , 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'
+                // {%for data in purchases%}
+                // // '{{data.status.completed}}',
+                // {% endfor %}
                 ], //it is the boundry label
-                datasets: [
+                datasets:[
                     {
-                        label: 'purchase ',
-                        data: [65, 59, 90, 81, 56, 55, 40],
+                        label : 'purchase ',
+                        data :[65, 59, 90, 81, 56, 55, 40],
                         fill: true,
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgb(255, 99, 132)',
@@ -302,18 +323,15 @@
                         pointBorderColor: '#fff',
                         pointHoverBackgroundColor: '#fff',
                         pointHoverBorderColor: 'rgb(54, 162, 235)',
-                    }
-
+                    } 
                 ],
-
             },
-
             options: {
-                responsive: true,
-
-                elements: {
-                    line: {
-                        borderWidth: 3
+                responsive:true,
+                
+                elements:{
+                    line:{
+                        borderWidth:3
                     }
                 }
             }
@@ -324,18 +342,18 @@
 <!-- radar chart for purchase and sales ends -->
 <!-- bar graph starts for customer and vendor  -->
 <script>
-    $(document).ready(function () {
+    $(document).ready(function(){
         var barChart = document.getElementById("bar_chart").getContext('2d');
-        var bar_chart = new Chart(barChart, {
-            type: 'bar',
+        var bar_chart = new Chart(barChart,{
+            type:'bar',
             data: {
                 label: 'Inventory',
-                datasets: [
-                    {
-                        label: 'customer ',
-                        data: [10, 0],
+                datasets:[
+                    {   
+                        label : 'customer ',
+                        data :[10,0],
                         fill: true,
-                        backgroundColor: '#0000FF',
+                        backgroundColor: '#0000FF'  ,
                         borderColor: 'rgb(255, 99, 132)',
                     },
                     {
@@ -344,18 +362,18 @@
                         fill: true,
                         backgroundColor: '#FF0000',
                         borderColor: 'rgb(54, 162, 235)',
-
+                        
                     }
-
+                        
                 ],
                 borderWidth: 5
             },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 50,
-
+            options :{
+                scales :{
+                    y:{
+                        beginAtZero:true,
+                        max:50, 
+                        
 
                     }
                 }
@@ -364,6 +382,72 @@
     })
 </script>
 <!-- bar graph ends for customer and vendor  -->
+<!-- sweetalert -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- ajax for date filter starts -->
 
+    {% comment %} <script>
+        $(document).ready(function(){
+            $("#").on('click', function(){
+
+                $.ajax({
+                    method : "POST",
+                    url : "/show_purchase_report/",
+                    data :{
+                        csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val(),
+                        // this will submit the start and end date
+                        start : $('#start').val(),
+                        end : $("#end").val()
+                    },
+                    success:function(purchase_data){
+                        console.log(purchase_data)
+                         
+                        $('#download').html("<a href='" + purchase_data.path + "' download > Download </a>")
+                    },
+                    error: function(e){
+                        console.log(e)
+                        swal("Ooops!!", "Seems like you didn't fill the date!!!")
+                    }
+                })
+            })
+        });
+    </script> {% endcomment %}
+    <script>
+
+        $('#purchase_report_form').submit( function(event){
+            if ($('#start').val() == ""){
+                swal("Please enter start date.", 'error');
+                event.preventDefault();
+            }
+            else if($('#end').val() == ""){
+                swal("Please enter end date.", 'error');
+                event.preventDefault();
+            }
+            else{
+                var form = $('#purchase_report_form')
+                console.log(form)
+                
+            }
+        })
+        $(function(){
+        var dtToday = new Date();
+        
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+            day = '0' + day.toString();
+        
+        var maxDate = year + '-' + month + '-' + day;
+        $('.date').attr('max', maxDate);
+    });
+    </script>
+
+    
+
+<!-- ajax for date filter ends -->
 
 {% endblock %}
+

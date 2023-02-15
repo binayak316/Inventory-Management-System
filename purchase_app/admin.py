@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Purchase, PurchaseItem
-import os
 from django.utils.html import format_html
+import datetime
+from rangefilter.filters import   DateRangeFilter
 # Register your models here.
 
 # class PurchaseAdmin(admin.ModelAdmin):
@@ -20,10 +21,10 @@ class PurchaseItemInline(admin.TabularInline):
 
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items','bill_number','vendor', 'status', 'purchased_by']
+    list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items','bill_number','vendor', 'status', 'purchased_by', 'created_at']
     # search_fields = ['vendor']
     search_fields = [ 'vendor__name', 'bill_number'] 
-    list_filter = ('status',)
+    list_filter = ('status','created_at')
     # inlines = [PurchaseItemInline]
 
     def items(self, obj):
@@ -31,8 +32,6 @@ class PurchaseAdmin(admin.ModelAdmin):
         value = ""
         for item in purchase_items:
             line = '<br>'
-            # data = "Products : %s \n\t Quantity : %s " % (item.product.name , item.quantity)
-            # value += data
             # value += f"""{item.product.name} ({item.quantity})""" + '<br>'
             value += f"""{item.product.name} ({item.quantity}) <br>"""
         return format_html(value)

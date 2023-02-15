@@ -25,4 +25,3 @@ class PurchaseSerializer(WritableNestedModelSerializer ,serializers.ModelSeriali
         model = Purchase
         fields = '__all__'
 
-

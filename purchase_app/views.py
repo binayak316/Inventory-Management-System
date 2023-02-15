@@ -8,7 +8,23 @@ from django.db.models import Q
 from .serializers import PurchaseSerializer,PurchaseItemSerializer
 from .models import Purchase, PurchaseItem
 from rest_framework.permissions import IsAuthenticated,DjangoModelPermissions
+from django.http import JsonResponse
 #import permission mixins
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+
+
+
+
+
+
+
+
+
+
 # Create your views here.
 
 
@@ -104,14 +120,111 @@ class PurchaseItemAPI(GenericAPIView):
         return Response({'error':serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
 
-def purchase_table(request):
-    if request.user.is_authenticated:
-        purchases = Purchase.objects.all()
-        # for purchase in purchases:
-        #     print(purchase.purchase_items.all())
-        context = {
-            'purchases':purchases,
-        }
-        return render(request, 'auth_app/chart/purchase_sales_table.html',context)
-    else:
-        return redirect('/login/')
+from datetime import datetime
+from datetime import timedelta
+from django.db.models import Sum
+def show_purchase_report(request):
+    if request.method == "POST":
+        start_date = request.POST.get('start')
+        end_date = request.POST.get('end')
+        # print(start_date, end_date)
+        if start_date and end_date:
+            
+            start_date_d = datetime.strptime(start_date, "%Y-%m-%d")
+            end_date_d = datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days = 1)
+
+            today = datetime.today()
+            if end_date_d or start_date_d > today:
+                print('thulo aayo')
+            
+            data = Purchase.objects.filter(created_at__range=(start_date_d, end_date_d ))
+            # print(data) 
+            # sum = Purchase.objects.filter(type="grand_total").aggregate(Sum('grand_total'))['grand_total__sum']
+            # sum = Purchase.objects.aggregate(Sum('grand_total'))
+            sum = Purchase.objects.aggregate(Sum('grand_total'))['grand_total__sum']
+
+            context = {
+                'data':data,
+                'sum':sum,
+                'start_date_d':start_date_d,
+                'end_date_d':end_date_d
+            }
+        else:
+            return redirect('/dashboard/') 
+        
+
+        return render(request, 'purchase_app/pdf_format_purchase.html',context)
+    return redirect('/dashboard/')
+
+
+# def pdf_report_create(request):
+#     
+# def render_pdf_view(request):
+
+#     template_path = 'purchase_app/pdf_report.html'
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'filename="purchase_report.pdf"'
+#     # find the template and render it.
+#     template = get_template(template_path)
+#     html = template.render(context)
+
+#     # create a pdf
+#     pisa_status = pisa.CreatePDF(
+#     html, dest=response)
+#     # if error then show some funny view
+#     if pisa_status.err:
+#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     return response
+
+
+
+
+
+# ajax method
+# import os
+# from datetime import datetime
+
+# def purchase_history(request):
+#     """this function gives the data with in the range(date) """
+#     if request.method == "POST":
+#         # print(request.POST)
+#         start_date = request.POST.get('start')
+#         end_date = request.POST.get('end')
+#         # print(start_date, end_date)
+#         start_date_d = datetime.strptime(start_date, "%Y-%m-%d")
+#         end_date_d = datetime.strptime(end_date, "%Y-%m-%d")
+
+#         print(start_date_d) 
+#         print(end_date_d)
+
+#         data = Purchase.objects.filter(created_at__range=(start_date_d, end_date_d))
+#         purchase_data = []
+#         for purchase in data:
+#             vendor_name = purchase.vendor.name if purchase.vendor is not None else None
+           
+#             purchase_data.append({
+#                 'id':purchase.id,
+#                 'bill_number':purchase.bill_number,
+#                 'vendor':purchase.vendor.name,
+#                 'vendor':vendor_name, 
+#                 'grand_total':purchase.grand_total,
+#                 'sub_total':purchase.sub_total,
+#                 'disc_percent':purchase.disc_percent,
+#                 'tax_percent':purchase.tax_percent,
+#                 'tax_amount':purchase.tax_amount,
+#                 'status':purchase.status,
+#                 'created_at':purchase.created_at,
+#                 'status':purchase.status,
+#             })
+
+#             #create a report pdf here and store anywhere in application server 
+#         return JsonResponse(purchase_data, safe=False)
+#         # return JsonResponse({
+#         #     'path' : "/media/images/blak.jpg"
+#         # })
+#     else:
+#         return JsonResponse({'msg':"Error occured!!"})
+
+
+
+    

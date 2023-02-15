@@ -24,4 +24,3 @@ class SalesSerializer(WritableNestedModelSerializer, serializers.ModelSerializer
     class Meta:
         model = Sales
         fields = '__all__'
-
