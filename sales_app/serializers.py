@@ -19,7 +19,7 @@ class SalesSerializer(WritableNestedModelSerializer, serializers.ModelSerializer
     sales_items = SalesItemSerializer(many=True)
     # customer = CustomerSpecificSerializer()
     selling_by_name = serializers.StringRelatedField(source='sales_by.first_name', read_only=True)
-    customer = serializers.StringRelatedField(source='customer.name', read_only=True)
+    # customer = serializers.StringRelatedField(source='customer.name', read_only=False)
     
     class Meta:
         model = Sales
