@@ -286,22 +286,23 @@ class CheckOtpApi(GenericAPIView):
                     return Response({
                         # 'user_id':user_id,
                         'status': 'success',
-                        'message': 'OTP is valid'})
+                        'message': 'OTP is valid', 
+                        }, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     return Response({
                         'status': 'error', 
                         'message': 'OTP is invalid'
-                        })
+                        }, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({
                     'status': 'error',
                     'message': "OTP didn't match "
-                    })
+                    }, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({
                 'status': 'error',
                 'message': 'Invalid data'
-                })        
+                }, status=status.HTTP_400_BAD_REQUEST)        
 
 class UserLoginApi(GenericAPIView):
     """Api for the user login."""
@@ -326,7 +327,7 @@ class UserLoginApi(GenericAPIView):
                 return Response({'token':token,'user_id':user.id, 'msg':'Login successful'}, status= status.HTTP_200_OK)
             else:
                 # return Response({'errors':'Email or Password is not valid'},status=status.HTTP_404_NOT_FOUND)
-                return Response({'errors':{'non_field_errors':['Email or Password is not valid']}},status=status.HTTP_404_NOT_FOUND)
+                return Response({'errors':{'non_field_errors':['Email or Password is not valid'],'error':status.HTTP_400_BAD_REQUEST}},status=status.HTTP_400_BAD_REQUEST)
         
         else:
             return Response({'error' : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
