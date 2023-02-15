@@ -22,7 +22,37 @@
 
 
   <div class="col-lg-9 col-12">
-  
+  <!-- bootstrap date range starts -->
+
+  <div class="container mt-5 col-12 d-flex" style="padding:10px;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;">
+    <form action="/show_purchase_report/" method="POST" id="purchase_report_form">
+        {% csrf_token %}
+
+       <div class="col-12 d-flex" style="gap:10px;">
+            <div class="one">
+                <label for="">Start Date</label>
+                <input type="date" name="start" placeholder="start_date" id="start " class="form-control date">
+            </div> 
+            <div class="two">
+                
+                <label for="end_date">End Date</label>
+                <input type="date" name="end" placeholder="end_date" id="end" class="form-control date">
+
+            </div>
+            
+            <div id="download"  ></div>
+       </div> <br>
+       <div class=" d-flex justify-content-center" style="margin-left:10px;">
+        <input id="submit" type="submit" value="Create purchase Report" class="btn  btn-outline-dark col-7 "  >
+      </div>
+       
+    </form>
+
+   
+
+</div>
+
+<!-- bootstrap date range ends -->
         <div class="row">
            <div class="container col-12 mb-2 " style="gap:5px;">
 
@@ -75,6 +105,7 @@
             <div id="chart1"> 
                 <small>radar</small>
             </div> -->
+            
             <div class="col-md-6 col-sm-12">
                 {% for app in dashboard_list %}
                 <!-- this is the dashboard tables provided by django by itself  don't change it -->
@@ -111,6 +142,8 @@
                             </table>
                         </div>
                     </div> -->
+
+                    
                     <!--  this is the dashboard tables provided by django by itself  don't change it-->
 
                     {% if forloop.counter == middle|add:"0" %}
@@ -120,6 +153,7 @@
 
                 {% endfor %}
                 </div>
+               
         </div>
 
     </div>
@@ -193,30 +227,30 @@
                 method : "GET",
                 url : "/pie",
                 success : function(data){
-                    console.log(data)
-                    console.log(data[0].labels, data[0].product_count)
+                    // console.log(data)
+                    // console.log(data[0].labels, data[0].product_count)
                     var ctx = document.getElementById('myChart').getContext('2d');
-      var myChart = new Chart(ctx, {
-          type: 'pie',
-          data: {
-              labels: data[0].labels,
-              datasets: [{
-                  label: 'My First Dataset',
-                  data: data[0].product_count,
-                  backgroundColor: [
-                  'rgb(255, 99, 132)',
-                  'rgb(54, 162, 235)',
-                  'rgb(255, 205, 86)'
-                  ],
-                  borderWidth:1,
-                  hoverOffset: 10,
-                  
-              }]
-              }, 
-      });
+                    var myChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: data[0].labels,
+                            datasets: [{
+                                label: 'My First Dataset',
+                                data: data[0].product_count,
+                                backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 205, 86)'
+                                ],
+                                borderWidth:1,
+                                hoverOffset: 10,
+                                
+                            }]
+                            }, 
+                    });
                 },
                 error: function(e){
-                    console.log(e)
+                    // console.log(e)
                 }
             })
         })
@@ -262,12 +296,9 @@
                         pointBorderColor: '#fff',
                         pointHoverBackgroundColor: '#fff',
                         pointHoverBorderColor: 'rgb(54, 162, 235)',
-                    }
-                        
+                    } 
                 ],
-
             },
-
             options: {
                 responsive:true,
                 
@@ -324,7 +355,72 @@
     })
 </script>
 <!-- bar graph ends for customer and vendor  -->
+<!-- sweetalert -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- ajax for date filter starts -->
 
+    {% comment %} <script>
+        $(document).ready(function(){
+            $("#").on('click', function(){
+
+                $.ajax({
+                    method : "POST",
+                    url : "/show_purchase_report/",
+                    data :{
+                        csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val(),
+                        // this will submit the start and end date
+                        start : $('#start').val(),
+                        end : $("#end").val()
+                    },
+                    success:function(purchase_data){
+                        console.log(purchase_data)
+                         
+                        $('#download').html("<a href='" + purchase_data.path + "' download > Download </a>")
+                    },
+                    error: function(e){
+                        console.log(e)
+                        swal("Ooops!!", "Seems like you didn't fill the date!!!")
+                    }
+                })
+            })
+        });
+    </script> {% endcomment %}
+    <script>
+
+        $('#purchase_report_form').submit( function(event){
+            if ($('#start').val() == ""){
+                swal("Please enter start date.", 'error');
+                event.preventDefault();
+            }
+            else if($('#end').val() == ""){
+                swal("Please enter end date.", 'error');
+                event.preventDefault();
+            }
+            else{
+                var form = $('#purchase_report_form')
+                console.log(form)
+                
+            }
+        })
+        $(function(){
+        var dtToday = new Date();
+        
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+            day = '0' + day.toString();
+        
+        var maxDate = year + '-' + month + '-' + day;
+        $('.date').attr('max', maxDate);
+    });
+    </script>
+
+    
+
+<!-- ajax for date filter ends -->
 
 {% endblock %}
 

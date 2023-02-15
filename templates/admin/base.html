@@ -19,6 +19,18 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <script src="https://kit.fontawesome.com/bc607b3e78.js" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!--
+   datatable css js 
+<link href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" rel="stylesheet"> 
+  <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js" > </script>
+
+<script>
+
+      $(document).ready(function () {
+    $('#result_list').DataTable();
+});
+ </script> -->
+
   <!-- chartjs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
   <!-- link ends -->
@@ -391,9 +403,11 @@
 {% if jazzmin_settings.show_ui_builder %}
 <script>
     window.ui_changes = {{ jazzmin_ui.raw|as_json|safe }};
+
 </script>
 <script src="{% static "jazzmin/js/ui-builder.js" %}"></script>
 {% endif %}
+
 
 {% block extrajs %}{% endblock %}
 

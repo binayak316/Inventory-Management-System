@@ -58,14 +58,15 @@ class Purchase(models.Model):
     def __str__(self):
         return self.vendor.name 
     
+
     def get_subtotal(self):
-        items = PurchaseItem.objects.filter(purchase = self.id)
+        items = PurchaseItem.objects.filter(purchase=self.id)
         total = 0
         if items:
             for item in items:
                 total += item.total
-                return float(total)
-            return total
+            return float(total)
+        return total
     
     
 

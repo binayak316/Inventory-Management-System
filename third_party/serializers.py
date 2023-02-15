@@ -7,6 +7,11 @@ class VendorSerializer(serializers.ModelSerializer):
         model =Vendor
         fields = '__all__'
 
+class VendorSpecificSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Vendor
+        fields =['name']
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer

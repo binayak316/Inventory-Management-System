@@ -407,7 +407,8 @@ class ChangePasswordApi(generics.UpdateAPIView):
        
 
 def pie_chart(request):
-    """function that shows the pie chart"""
+    """function that shows the pie chart """
+    # outmost template ko login page ma ajax call vaxa yo fun ma
     categories = Category.objects.all()
     
     data = []

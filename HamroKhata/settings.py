@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'drf_yasg',    
     'rest_framework.authtoken',
     'django_filters',
+    'rangefilter',
 ]
 
 JAZZMIN_SETTINGS = {
