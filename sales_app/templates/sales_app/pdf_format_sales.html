@@ -1,0 +1,125 @@
+{% extends "admin/base_site.html" %}
+{% load static%}
+{% load i18n static jazzmin %}
+{% comment %} {% get_jazzmin_ui_tweaks as jazzmin_ui %} {% endcomment %}
+
+{% block bodyclass %}{{ block.super }} PDF{% endblock %}
+
+{% block content_title %} {% trans 'PDF Viewer' %} {% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Dashboard' %}</li>
+    </ol>
+{% endblock %}
+
+
+{% block content %}
+    {% get_side_menu using="app_list" as dashboard_list %}
+    {% if dashboard_list %}
+        {% widthratio dashboard_list|length 2 1 as middle %}
+    {% endif %}
+
+
+<div class="col-12 mb-3">
+    <div class="d-flex justify-content-end">
+        <!-- <a href="#" class="btn btn-outline-dark col-2">Download PDF</a> -->
+        <button onclick="myfun('pdf')" class="btn btn-outline-dark col-2">Download PDF</button>
+    </div>
+</div>
+<div id="pdf" class="" style="border:1px solid black;" >
+    <div class="mt-5 col-12">
+		<!-- <div class="d-flex justify-content-center">
+            <h1>HamroKhata</h1> <br>
+            
+      </div> -->
+      <div class="d-flex justify-content-center">
+        <img src="{% static '/images/logo.png' %}" alt="" style="height: 80px;width:438px;" >
+      </div>
+      <div class="d-flex justify-content-center">
+        <h3>hamrokhata.ims@gmail.com</h3>
+      </div>
+      <div class="d-flex justify-content-center" >
+        <h5>This report is generated from &nbsp;<strong class="font-italic">{{start_date_d}}</strong> &nbsp;to&nbsp; <strong class="font-italic">{{end_date_d}}</strong> </h5>
+      </div> <br>
+        <div class="d-flex justify-content-center">
+            <h4>Date: <span id="date"></span></h4>
+        </div> <br>
+	</div>
+    <script>
+		var today = new Date();
+		document.getElementById("date").innerHTML = today.toLocaleDateString();
+	</script>
+    <div class="container" >
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">SN</th>
+                <th scope="col">Items</th>
+                <th scope="col">Discount Percent</th>
+                <th scope="col">Discount Amount</th>
+                <th scope="col">Tax Percent</th>
+                <th scope="col">Tax Amount</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Sales By</th>
+                <th scope="col">Sub Total</th>
+                <th scope="col">Grand Total</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>
+                  {% for p in item.sales_items.all %} 
+                  
+                  {{ p.product.name }} x {{ p.quantity }} <br>
+                  {% endfor %} 
+                </td>
+                <td>{{item.disc_percent}} %</td>
+                <td>Rs. {{item.discount_amount}}</td>
+                <td>{{item.tax_percent}} %</td>
+                <td>Rs. {{item.tax_amount}}</td>
+                <td>{{item.customer.name}}</td>
+                <!-- break the line after the purchase item  -->
+                
+                
+               
+                <td>{{item.sales_by}}</td>
+                <td>Rs. {{item.sub_total}}</td>
+                <td>Rs. {{item.grand_total}}</td>
+              </tr>
+              {% endfor %}
+              
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">Total Purchase</td>
+                    <td>Rs.{{sum }}    </td>
+                </tr>
+            </tfoot>
+          </table>
+    </div>
+   <div class="col-12">
+    <div class="d-flex justify-content-center">
+        <div class="mt-5">
+            <p>Staff Name: John Doe</p>
+        </div>
+    </div>
+   </div>
+    
+</div>
+<script type="text/javascript">
+  function myfun(paravalue){ //paravalue is a dynamic id which calls the pdf id
+    var backup = document.body.innerHTML;
+    var divcontent = document.getElementById(paravalue).innerHTML;
+    document.body.innerHTML = divcontent;
+    window.print();
+    document.body.innerHTML = backup;
+
+  }
+
+</script>
+
+{% endblock %}

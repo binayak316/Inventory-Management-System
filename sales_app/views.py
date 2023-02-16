@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -130,6 +130,43 @@ class SalesItemAPI(GenericAPIView):
         return Response({'error':serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
     
+
+from datetime import datetime
+from datetime import timedelta
+from django.db.models import Sum
+def show_sales_report(request):
+    if request.method == "POST":
+        start_date = request.POST.get('start')
+        end_date = request.POST.get('end')
+
+        if start_date and end_date:
+            start_date_d = datetime.strptime(start_date, "%Y-%m-%d")
+            end_date_d = datetime.strptime(end_date,"%Y-%m-%d")+ timedelta(days=1)
+
+            today = datetime.today()
+            if end_date_d or start_date_d > today():
+                print('thulo val')
+            
+            data = Sales.objects.filter(created_at__range=(start_date_d,end_date_d))
+
+            sum = data.aggregate(Sum('grand_total'))['grand_total__sum']
+            if sum is not None:
+                sum = round(sum,4)
+            else:
+                sum = 0.0
+            context = {
+                'data':data,
+                'sum':sum,
+                'start_date_d':start_date_d,
+                'end_date_d':end_date_d,
+            }
+        else:
+            return redirect('/dashboard')
+
+        return render(request, 'sales_app/pdf_format_sales.html', context)
+    return redirect('/dashboard/')
+
+            
 
 
 
