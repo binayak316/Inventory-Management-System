@@ -56,13 +56,13 @@
             <thead>
               <tr>
                 <th scope="col">SN</th>
+                <th scope="col">Items</th>
                 <th scope="col">Discount Percent</th>
                 <th scope="col">Discount Amount</th>
                 <th scope="col">Tax Percent</th>
                 <th scope="col">Tax Amount</th>
-                <th scope="col">Vendor</th>
-                <th scope="col">Items</th>
-                <th scope="col">Purchased By</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Sales By</th>
                 <th scope="col">Sub Total</th>
                 <th scope="col">Grand Total</th>
               </tr>
@@ -71,21 +71,22 @@
                 {% for item in data %}
               <tr>
                 <th scope="row">{{forloop.counter}}</th>
-                <td>{{item.disc_percent}} %</td>
-                <td>Rs. {{item.discount_amount}}</td>
-                <td>{{item.tax_percent}} %</td>
-                <td>Rs. {{item.tax_amount}}</td>
-                <td>{{item.vendor.name}}</td>
-                <!-- break the line after the purchase item  -->
-                
                 <td>
-                  {% for p in item.purchase_items.all %} 
+                  {% for p in item.sales_items.all %} 
                   
                   {{ p.product.name }} x {{ p.quantity }} <br>
                   {% endfor %} 
                 </td>
+                <td>{{item.disc_percent}} %</td>
+                <td>Rs. {{item.discount_amount}}</td>
+                <td>{{item.tax_percent}} %</td>
+                <td>Rs. {{item.tax_amount}}</td>
+                <td>{{item.customer.name}}</td>
+                <!-- break the line after the purchase item  -->
+                
+                
                
-                <td>{{item.purchased_by}}</td>
+                <td>{{item.sales_by}}</td>
                 <td>Rs. {{item.sub_total}}</td>
                 <td>Rs. {{item.grand_total}}</td>
               </tr>
@@ -94,7 +95,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="9">Total Purchase</td>
+                    <td colspan="9">Total Sales</td>
                     <td>Rs.{{sum }}    </td>
                 </tr>
             </tfoot>

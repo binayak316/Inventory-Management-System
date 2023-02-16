@@ -48,6 +48,30 @@
        
     </form>
 
+
+    <form action="/show_sales_report/" method="POST" id="sales_report_form">
+        {% csrf_token %}
+
+       <div class="col-12 d-flex" style="gap:10px;">
+            <div class="one">
+                <label for="">Start Date</label>
+                <input type="date" name="start" placeholder="start_date" id="sales_start " class="form-control date ">
+            </div> 
+            <div class="two">
+                
+                <label for="end_date">End Date</label>
+                <input type="date" name="end" placeholder="end_date" id="sales_end" class="form-control date">
+
+            </div>
+            
+            <div id="download"  ></div>
+       </div> <br>
+       <div class=" d-flex justify-content-center" style="margin-left:10px;">
+        <input id="submit" type="submit" value="Create Sales Report" class="btn  btn-outline-dark col-7 "  >
+      </div>
+       
+    </form>
+
    
 
 </div>
@@ -386,7 +410,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- ajax for date filter starts -->
 
-    {% comment %} <script>
+   <!-- <script>
         $(document).ready(function(){
             $("#").on('click', function(){
 
@@ -411,16 +435,19 @@
                 })
             })
         });
-    </script> {% endcomment %}
+    </script> 
+    -->
+    <!-- ajax for date filter ends  -->
+    <!-- script that throws error while submit the blank date starts -->
     <script>
 
         $('#purchase_report_form').submit( function(event){
             if ($('#start').val() == ""){
-                swal("Please enter start date.", 'error');
+                swal("Error!", 'Please enter start date.');
                 event.preventDefault();
             }
             else if($('#end').val() == ""){
-                swal("Please enter end date.", 'error');
+                swal("Error!", 'Please enter end date.');
                 event.preventDefault();
             }
             else{
@@ -429,6 +456,24 @@
                 
             }
         })
+
+        $('#sales_report_form').submit(function(event){
+            if($('#sales_start').val()==""){
+                swal("Error!",'Please enter the start date.');
+                event.preventDefault();
+            }
+            else if($('#sales_end').val() == ""){
+                swal("Error!", 'Please enter end date.');
+                event.preventDefault();
+            }
+            else{
+                var form = $('#sales_report_form')
+                console.log(form)
+            }
+        });
+
+
+        // function which restrict the future dates
         $(function(){
         var dtToday = new Date();
         
@@ -444,10 +489,11 @@
         $('.date').attr('max', maxDate);
     });
     </script>
+    <!-- script that throws error while submit the blank date ends -->
 
     
 
-<!-- ajax for date filter ends -->
+
 
 {% endblock %}
 

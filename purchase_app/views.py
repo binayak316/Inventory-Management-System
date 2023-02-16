@@ -138,10 +138,13 @@ def show_purchase_report(request):
                 print('thulo aayo')
             
             data = Purchase.objects.filter(created_at__range=(start_date_d, end_date_d ))
-            # print(data) 
-            # sum = Purchase.objects.filter(type="grand_total").aggregate(Sum('grand_total'))['grand_total__sum']
-            # sum = Purchase.objects.aggregate(Sum('grand_total'))
-            sum = Purchase.objects.aggregate(Sum('grand_total'))['grand_total__sum']
+            # sum = data.aggregate(Sum('grand_total'))
+            # sum = round(data.aggregate(Sum('grand_total'))['grand_total__sum'],3)
+            sum = data.aggregate(Sum('grand_total'))['grand_total__sum']
+            if sum is not None:
+                sum = round(sum, 4)
+            else:
+                sum = 0.0
 
             context = {
                 'data':data,
@@ -157,24 +160,6 @@ def show_purchase_report(request):
     return redirect('/dashboard/')
 
 
-# def pdf_report_create(request):
-#     
-# def render_pdf_view(request):
-
-#     template_path = 'purchase_app/pdf_report.html'
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = 'filename="purchase_report.pdf"'
-#     # find the template and render it.
-#     template = get_template(template_path)
-#     html = template.render(context)
-
-#     # create a pdf
-#     pisa_status = pisa.CreatePDF(
-#     html, dest=response)
-#     # if error then show some funny view
-#     if pisa_status.err:
-#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
-#     return response
 
 
 
