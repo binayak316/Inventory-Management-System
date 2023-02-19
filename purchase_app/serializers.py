@@ -19,7 +19,7 @@ class PurchaseSerializer(WritableNestedModelSerializer ,serializers.ModelSeriali
     purchase_by_name = serializers.StringRelatedField(source='purchased_by.first_name', read_only=True)
     purchase_items = PurchaseItemSerializer(many=True)
     # vendor = VendorSpecificSerializer()
-    vendor = serializers.StringRelatedField(source='vendor.name', read_only=True)
+    # vendor = serializers.StringRelatedField(source='vendor.name', read_only=True)
 
     class Meta:
         model = Purchase

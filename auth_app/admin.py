@@ -19,6 +19,7 @@ admin.site.logout = logout_page
 class MyUserAdmin(UserAdmin):
     add_form = MyUserForm
     model = MyUser
+    list_per_page = 10
     list_display = ['username', 'phone', 'email', 'first_name', 'last_name','position', 'is_staff']
 
     fieldsets = UserAdmin.fieldsets + (
@@ -29,6 +30,9 @@ class MyUserAdmin(UserAdmin):
 admin.site.register(MyUser, MyUserAdmin) 
 
 class OtpModelAdmin(admin.ModelAdmin):
+    model = OtpModel
+    list_per_page=10
     list_display = ['id','otp' ,'myuser']
+
 
 admin.site.register(OtpModel,OtpModelAdmin)

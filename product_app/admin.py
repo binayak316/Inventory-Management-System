@@ -8,6 +8,9 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['serial_number','name','purchase_price','selling_price','sku', 'category','current_stock', 'img_preview']
     search_fields = ['name']
     readonly_fields = ['serial_number']
+    
+    model=Product
+    list_per_page=10
 
     def serial_number(self, obj):
         """calculates the serialnumber by finding the positions of the object in the sorted queryset"""
@@ -31,6 +34,8 @@ admin.site.register(Permission)
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id','name','description']
+    model = Category
+    list_per_page = 15
     class Media:
         css = {
             'all': ('css/admin.css',),
