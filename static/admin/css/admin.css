@@ -1,0 +1,16 @@
+#result_list th:nth-child(2) {
+    color: red; /* Set the color to red */
+}
+.text th:nth-child(2) {
+    color: red; /* Set the color to red */
+}
+.text span{
+    color:Black;
+
+}
+th .text span{
+color:black;
+}
+th text{
+    color:black;
+}
