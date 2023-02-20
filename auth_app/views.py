@@ -287,7 +287,7 @@ class CheckOtpApi(GenericAPIView):
                         # 'user_id':user_id,
                         'status': 'success',
                         'message': 'OTP is valid', 
-                        }, status=status.HTTP_400_BAD_REQUEST)
+                        }, status=status.HTTP_200_OK)
                 else:
                     return Response({
                         'status': 'error', 
