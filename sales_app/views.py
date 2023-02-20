@@ -147,7 +147,7 @@ def show_sales_report(request):
             if end_date_d or start_date_d > today():
                 print('thulo val')
             
-            data = Sales.objects.filter(created_at__range=(start_date_d,end_date_d))
+            data = Sales.objects.filter(created_at__range=(start_date_d,end_date_d), status = 'Completed')
 
             sum = data.aggregate(Sum('grand_total'))['grand_total__sum']
             if sum is not None:

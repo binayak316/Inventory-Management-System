@@ -137,7 +137,7 @@ def show_purchase_report(request):
             if end_date_d or start_date_d > today:
                 print('thulo aayo')
             
-            data = Purchase.objects.filter(created_at__range=(start_date_d, end_date_d ))
+            data = Purchase.objects.filter(created_at__range=(start_date_d, end_date_d ), status = 'Completed')
             # sum = data.aggregate(Sum('grand_total'))
             # sum = round(data.aggregate(Sum('grand_total'))['grand_total__sum'],3)
             sum = data.aggregate(Sum('grand_total'))['grand_total__sum']

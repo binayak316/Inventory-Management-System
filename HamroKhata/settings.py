@@ -135,7 +135,7 @@ JAZZMIN_SETTINGS = {
     "hide_apps": [],
 
     # Hide these models when generating side menu (e.g auth.user)
-    "hide_models": [],
+    "hide_models": ['purchase_app.purchaseitem', 'sales_app.salesitem'],
     # "hide_models": ["auth.user"], ?tyo model hide gardinxa side ko
 
     #
