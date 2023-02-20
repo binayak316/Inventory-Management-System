@@ -24,3 +24,26 @@
     border:none !important;
 }
 /* login again page ends */
+
+
+
+/* table show all button color */
+
+.dataTables_info a:hover{
+    background-color: rgb(253, 109, 13);
+}
+.dataTable_info a{
+    background-color: rgb(253, 109, 13) !important;
+}
+
+
+/* pagination active color */
+.pagination_background_color  .active a{
+    background-color:rgb(253, 109, 13) !important;
+    border-color: rgb(253, 109, 13) !important;
+}
+
+/* change the color of the table */
+table thead th .text{
+    color:black;
+}

@@ -62,8 +62,7 @@ class Sales(models.Model):
         ordering = ('created_at',)
 
     def __str__(self):
-        return str(self.customer) + str(self.customer.id)
-
+        return str(self.customer) 
     def get_subtotal(self):
         items = SalesItem.objects.filter(sales=self.id)
         total = 0
