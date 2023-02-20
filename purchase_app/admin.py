@@ -16,8 +16,8 @@ class PurchaseItemAdmin(admin.ModelAdmin):
 admin.site.register(PurchaseItem,PurchaseItemAdmin)
 
 
-class PurchaseItemInline(admin.TabularInline):
-    model = PurchaseItem
+# class PurchaseItemInline(admin.TabularInline):
+    # model = Purchase.purchase_items.through
     
 
 
@@ -27,7 +27,7 @@ class PurchaseAdmin(admin.ModelAdmin):
     search_fields = [ 'vendor__name', 'bill_number'] 
     list_filter = ('status','created_at')
     readonly_fields = ['serial_number']
-
+    # inlines = [PurchaseItemInline]
     model = Purchase
     list_per_page = 10
 
@@ -70,3 +70,4 @@ class PurchaseAdmin(admin.ModelAdmin):
         return queryset
 
 admin.site.register(Purchase,PurchaseAdmin)
+
