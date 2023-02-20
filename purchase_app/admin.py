@@ -22,10 +22,11 @@ class PurchaseItemInline(admin.TabularInline):
 
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ['id','grand_total','sub_total','discount_amount','tax_amount','items','bill_number','vendor', 'status', 'purchased_by', 'created_at']
+    list_display = ['serial_number','grand_total','sub_total','discount_amount','tax_amount','items','bill_number','vendor', 'status', 'purchased_by', 'created_at']
     # search_fields = ['vendor']
     search_fields = [ 'vendor__name', 'bill_number'] 
     list_filter = ('status','created_at')
+    readonly_fields = ['serial_number']
 
     model = Purchase
     list_per_page = 10
@@ -54,5 +55,18 @@ class PurchaseAdmin(admin.ModelAdmin):
         items_html += '</ul></div>'
         return format_html(items_html)
     items.short_description = 'Items'
+
+
+    def serial_number(self, obj):
+        """calculates the serialnumber by finding the positions of the object in the sorted queryset"""
+        queryset = self.get_queryset(obj) # This method returns a queryset of all objects for the current model, sorted by their id field.
+        index = list(queryset).index(obj) + 1 #This is done by converting the queryset to a list, and then using the index method to find the index of the current object. We add 1 to the index to get the serial number.
+        return index
+
+    def get_queryset(self, obj=None):
+        """this functions returns a sorted queryset of all objects for the model"""
+        queryset = super().get_queryset(obj)
+        queryset = queryset.order_by('id')
+        return queryset
 
 admin.site.register(Purchase,PurchaseAdmin)
