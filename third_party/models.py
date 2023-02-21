@@ -19,7 +19,7 @@ class Vendor(models.Model):
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.IntegerField()
+    phone = models.IntegerField( blank=True, null=True)
     email = models.EmailField()
 
     created_at = models.DateTimeField(auto_now_add=True)
