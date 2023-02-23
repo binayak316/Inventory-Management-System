@@ -33,9 +33,16 @@ class SalesAPI(GenericAPIView):
                 return Response(serializer.data)
             sell = Sales.objects.all()
 
-            if request.GET.get('customer'):
-                search = request.GET.get('customer')
-                sale_order = Sales.objects.all().filter(Q(customer__name__contains=search))
+            customer_search = request.GET.get('customer')
+            status_search = request.GET.get('status')
+            
+            if customer_search or status_search:
+                if customer_search and status_search:
+                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search))
+                elif customer_search:
+                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search))
+                elif status_search:
+                    sale_order = Sales.objects.filter(Q(status__icontains=status_search))
                 if not sale_order:
                     return Response({'message': 'Not Found'})
                 serializer = SalesSerializer(sale_order, many=True)

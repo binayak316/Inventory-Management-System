@@ -47,9 +47,9 @@ class PurchaseAPI(GenericAPIView):
                 return Response(serializer.data)
             purchases = Purchase.objects.all()
 
-            if request.GET.get('search'):
-                search = str(request.GET.get('search'))
-                pur_order = Purchase.objects.all().filter(Q(vendor__name__contains=search) | Q(status__contains=search) )
+            if request.GET.get('vendor'):
+                search = str(request.GET.get('vendor'))
+                pur_order = Purchase.objects.all().filter(Q(vendor__name__contains=search))
                 if not pur_order:
                     return Response({'message':'Not Found'})
                 serializer = PurchaseSerializer(pur_order, many=True)
