@@ -18,8 +18,10 @@ class PurchaseItemSerializer(serializers.ModelSerializer):
 class PurchaseSerializer(WritableNestedModelSerializer ,serializers.ModelSerializer):
     purchase_by_name = serializers.StringRelatedField(source='purchased_by.first_name', read_only=True)
     purchase_items = PurchaseItemSerializer(many=True)
-    vendor = VendorSpecificSerializer()
-    # vendor = serializers.StringRelatedField(source='vendor.name', read_only=True)
+
+    vendor = serializers.CharField(source='vendor.name')
+    # this is used for only get vendor name get method we have to write post method to post vendor name
+    # vendor = serializers.StringRelatedField(source='vendor.name')
 
     class Meta:
         model = Purchase
