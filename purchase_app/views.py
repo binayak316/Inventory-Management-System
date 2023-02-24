@@ -7,6 +7,7 @@ from rest_framework import status
 from django.db.models import Q
 from .serializers import PurchaseSerializer,PurchaseItemSerializer
 from .models import Purchase, PurchaseItem
+from third_party.models import Vendor
 from rest_framework.permissions import IsAuthenticated,DjangoModelPermissions
 from django.http import JsonResponse
 #import permission mixins
@@ -45,20 +46,26 @@ class PurchaseAPI(GenericAPIView):
                 purchase = Purchase.objects.get(id=id)
                 serializer = PurchaseSerializer(purchase)
                 return Response(serializer.data)
+            
+
+
+            vendor_search = request.GET.get('vendor')
+            created_at_str = request.GET.get('created_at') #suru ma ta date string ko format ma aairaxa json bata 
+            # print(vendor_search, created_at_str)
             purchases = Purchase.objects.all()
+            if vendor_search or created_at_str:
+                if vendor_search and created_at_str:
+                    created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
+                    purchases = purchases.filter(Q(vendor__name__icontains=vendor_search),Q(created_at__date=created_at))
+                elif vendor_search:
+                    purchases = purchases.filter(vendor__name__icontains=vendor_search)
+                elif created_at_str:
+                    created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
+                    purchases = purchases.filter(created_at__date=created_at)
+                    print(purchases)
+                if not purchases:
+                    return Response({'message': 'Not Found'})
 
-            if request.GET.get('vendor'):
-                search = str(request.GET.get('vendor'))
-                pur_order = Purchase.objects.all().filter(Q(vendor__name__contains=search))
-                if not pur_order:
-                    return Response({'message':'Not Found'})
-                serializer = PurchaseSerializer(pur_order, many=True)
-                return Response({
-                    'msg':'Order you are looking for ',
-                    'status':status.HTTP_200_OK,
-                    'data':serializer.data,
-
-                },status = status.HTTP_200_OK)
             serializer = PurchaseSerializer(purchases, many=True)
             return Response(serializer.data)
         else:
@@ -71,7 +78,26 @@ class PurchaseAPI(GenericAPIView):
         # print(serializer)
 
 
+        vendor_name = request.data.get('vendor')
+        # print(request.data)
+        if vendor_name is not None:
+            try:
+                vendor = Vendor.objects.get(name=vendor_name)
+            except Vendor.DoesNotExist:
+                return Response({
+                    'msg': f'vendor with name {vendor_name} does not exist',
+                    'status': status.HTTP_404_NOT_FOUND,
+                },status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                'msg':'please provide a valid customer name',
+                'status':status.HTTP_400_BAD_REQUEST
+            })
+
+    
+
         if serializer.is_valid():
+            serializer.validated_data['vendor'] = vendor
             serializer.save()
             purchase = Purchase.objects.get(id=serializer.data['id'])
             purchase.sub_total = 0

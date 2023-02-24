@@ -8,7 +8,8 @@ from django.contrib.auth.models import Permission
 from .models import SalesItem, Sales
 from django.db.models import Q
 from product_app.models import Product
-
+from third_party.models import Customer
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 # Create your views here.
 
@@ -35,12 +36,17 @@ class SalesAPI(GenericAPIView):
 
             customer_search = request.GET.get('customer')
             status_search = request.GET.get('status')
-            
-            if customer_search or status_search:
-                if customer_search and status_search:
-                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search))
+            created_at_str = request.GET.get('created_at')
+            # print(created_at_str)
+            if customer_search or status_search or created_at_str:
+                if customer_search and status_search and created_at_str:
+                    created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
+                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search), Q(created_at__date=created_at))
                 elif customer_search:
                     sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search))
+                elif status_search and created_at_str:
+                    created_at = datetime.strptime(created_at_str,'%Y-%m-%d').date()
+                    sale_order = Sales.objects.filter(Q(status__icontains=status_search), Q(created_at__date=created_at))
                 elif status_search:
                     sale_order = Sales.objects.filter(Q(status__icontains=status_search))
                 if not sale_order:
@@ -57,6 +63,24 @@ class SalesAPI(GenericAPIView):
 
 
     def post(self, request ,*args, **kwargs):
+
+        customer_name = request.data.get('customer')
+        # print(request.data)
+        # print(customer_name)
+        if customer_name is not None:
+            try:
+                customer = Customer.objects.get(name=customer_name)
+            except Customer.DoesNotExist:
+                return Response({
+                    'msg': f"Customer with name {customer_name} does not exist",
+                    'status': status.HTTP_404_NOT_FOUND,
+                }, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({
+                'msg':'please provide a valid customer name',
+                'status':status.HTTP_400_BAD_REQUEST
+            })
+
         serializer = SalesSerializer(data = request.data)
 
         out_of_stock_products = []
@@ -78,6 +102,7 @@ class SalesAPI(GenericAPIView):
 
 
         if serializer.is_valid():
+            serializer.validated_data['customer'] =customer
             serializer.save()
             sales = Sales.objects.get(id=serializer.data['id'])
             
