@@ -55,3 +55,54 @@
     color: white;
     font-weight: bold;
 }
+
+
+/* Responsivenes*/
+@media screen and (max-width: 992px) {
+
+    .signupRow {
+        width: 120%;
+    }
+
+    .centralpart {
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    .signupRow {
+        width: 150%;
+        margin-left: -20% !important;
+    }
+
+    .centralpart {
+        margin-left: 0;
+    }
+
+    .logoImage img {
+        height: 60px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media screen and (max-width: 576px) {
+
+    .signupRow {
+        width: 150%;
+        margin-left: -20% !important;
+    }
+
+    .centralpart {
+        margin-left: 0;
+    }
+
+    .logoImage img {
+        height: 50px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
