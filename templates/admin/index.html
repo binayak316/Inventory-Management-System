@@ -139,14 +139,13 @@
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#bbb" aria-expanded="true" aria-controls="bbb">
-                                    Radar Chart
+                                    Donut Chart
                                 </button>
                             </h2>
                             <div id="bbb" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample2">
                                 <div class="accordion-body">
-                                    <small>Line and Bar chart</small>
-                                    <canvas id="radar" width="800" height="700 "></canvas>
+                                    <canvas id="donut" width="800" height="700 "></canvas>
                                 </div>
                             </div>
                         </div>
@@ -160,13 +159,12 @@
                             <h2 class="accordion-header" id="headingThree">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#ccc" aria-expanded="true" aria-controls="ccc">
-                                    Bar Diagram
+                                    Bar Diagram( No of Customer  and Vendors)
                                 </button>
                             </h2>
                             <div id="ccc" class="accordion-collapse collapse" aria-labelledby="headingThree"
                                 data-bs-parent="#accordionExample1">
                                 <div class="accordion-body">
-                                    <small>bar for vendor and customer</small>
                                     <canvas id="bar_chart" width="800" height="700 "></canvas>
                                 </div>
                             </div>
@@ -178,13 +176,13 @@
                             <h2 class="accordion-header" id="headingFour">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#ddd" aria-expanded="true" aria-controls="ddd">
-                                    Line Diagram
+                                    Bar Graph
                                 </button>
                             </h2>
                             <div id="ddd" class="accordion-collapse collapse" aria-labelledby="headingFour"
                                 data-bs-parent="#accordionExample2">
                                 <div class="accordion-body">
-                                    <small>line for performance</small>
+                                    <small>Selling done categorywise</small>
                                     <canvas id="" width="800" height="700 "></canvas>
                                 </div>
                             </div>
@@ -344,154 +342,84 @@
     </script>
     <!-- pie chart ends -->
 
-<!-- radar chart for purchase and sales starts -->
+<!-- donut chart for purchase and sales starts -->
 <script>
-
-$(document).ready(function(){
-        var ctx = document.getElementById('radar').getContext('2d');
-        var radar = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-                datasets: [{
-                    label: 'Inventory',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                },
-                {
-                    label: 'Sales',
-                    type: 'line',
-                    data: [10, 5, 20, 15, 8, 25],
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2,
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+   
+    $(document).ready(function(){
+        $.ajax({
+            method : "GET",
+            url : "/bar_chart_performance_category_wise",
+            success : function(data){
+                console.log(data)
+                var ctx = document.getElementById('donut').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'My First Dataset',
+                            data: data.data,
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 205, 86)'
+                            ],
+                            borderWidth:1,
+                            hoverOffset: 10,
+                        }]
                     }
-                }
-            }
-        });
-    });
-
-
-
-
-
-
-    //line and bar chart code above
-    //radar chart code below
-    // $(document).ready(function(){
-    //     // const DATA_COUNT = 12;
-    //     // const NUMBER_CFG = {count:DATA_COUNT, min:0, max:100};
-    //     // const labels  = Utils.months({count:12});
-
-    //     var radar = document.getElementById('Radar_chart').getContext('2d');
-    //     var Radar_chart = new Chart(radar, {
-    //         type:'radar',
-    //         data: {
-    //             labels: [ 'Jan', 'Feb' , 'Mar' , 'Apr', 'May' , 'Jun' , 'Jul' , 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'
-    //             // {%for data in purchases%}
-    //             // // '{{data.status.completed}}',
-    //             // {% endfor %}
-    //             ], //it is the boundry label
-    //             datasets:[
-    //                 {
-    //                     label : 'purchase ',
-    //                     data :[65, 59, 90, 81, 56, 55, 40],
-    //                     fill: true,
-    //                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    //                     borderColor: 'rgb(255, 99, 132)',
-    //                     pointBackgroundColor: 'rgb(255, 99, 132)',
-    //                     pointBorderColor: '#fff',
-    //                     pointHoverBackgroundColor: '#fff',
-    //                     pointHoverBorderColor: 'rgb(255, 99, 132)',
-    //                 },
-    //                 {
-    //                     label: 'sales',
-    //                     data: [28, 48, 40, 19, 96, 27, 100],
-    //                     fill: true,
-    //                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
-    //                     borderColor: 'rgb(54, 162, 235)',
-    //                     pointBackgroundColor: 'rgb(54, 162, 235)',
-    //                     pointBorderColor: '#fff',
-    //                     pointHoverBackgroundColor: '#fff',
-    //                     pointHoverBorderColor: 'rgb(54, 162, 235)',
-    //                 } 
-    //             ],
-    //         },
-    //         options: {
-    //             responsive:true,
+                });
                 
-    //             elements:{
-    //                 line:{
-    //                     borderWidth:3
-    //                 }
-    //             }
-    //         }
+            },
+            error: function(e){
+                // console.log(e)
+            }
+        })
+    })
 
-    //     })
-    // });
 </script>
-<!-- radar chart for purchase and sales ends -->
+<!-- donut chart for purchase and sales ends -->
+
+
+
 <!-- bar graph starts for customer and vendor  -->
 <script>
     $(document).ready(function(){
-        var barChart = document.getElementById("bar_chart").getContext('2d');
-        var bar_chart = new Chart(barChart,{
-            type:'bar',
-            data: {
-                label: 'Inventory',
-                datasets:[
-                    {   
-                        label : 'customer ',
-                        data :[10,0],
-                        fill: true,
-                        backgroundColor: '#0000FF'  ,
-                        borderColor: 'rgb(255, 99, 132)',
-                    },
-                    {
-                        label: 'vendor',
-                        data: [11, 11],
-                        fill: true,
-                        backgroundColor: '#FF0000',
-                        borderColor: 'rgb(54, 162, 235)',
-                        
-                    }
-                        
+        $.ajax({
+            method:"GET",
+            url:"/bar",
+            success:function(data){
+                // console.log(data)
+                // console.log(data)
+                var ctx = document.getElementById('bar_chart').getContext('2d');
+                var bar_chart = new Chart(ctx, {
+                    type:'bar',
+                    data: {
+                            label: 'Inventory',
+                            datasets:[
+                            {   
+                                label : 'customer',
+                                data :[data.data[0],0],
+                                fill: true,
+                                backgroundColor: '#0000FF'  ,
+                                borderColor: 'rgb(255, 99, 132)',
+                            },
+                            {
+                                label: 'vendor',
+                                data: [data.data[1], 0],
+                                fill: true,
+                                backgroundColor: '#FF0000',
+                                borderColor: 'rgb(54, 162, 235)',                        
+                            }                    
                 ],
-                borderWidth: 5
-            },
-            options :{
-                scales :{
-                    y:{
-                        beginAtZero:true,
-                        max:50, 
-                        
+                    borderWidth: 5
+                },
+                })
 
-                    }
-                }
             }
         })
+             
+        
     })
 </script>
 <!-- bar graph ends for customer and vendor  -->

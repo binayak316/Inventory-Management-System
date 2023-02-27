@@ -34,7 +34,8 @@ urlpatterns = [
     # charts
     # path('ChartData/', ChartData.as_view(), name="ChartData"),# shows the categories and products chart
     path('pie/', views.pie_chart, name="pie"),
-    path('radar/', views.radar_chart, name='radar'),
+    path('bar/', views.bar_chart, name='bar'),
+    path('bar_chart_performance_category_wise/',views.bar_chart_performance_category_wise, name='bar_chart_performance_category_wise'),
 
     
 

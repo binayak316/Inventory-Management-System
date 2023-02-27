@@ -19,7 +19,7 @@ from django.views.generic import TemplateView
 from rest_framework import generics
 from rest_framework.response import Response
 from django.db.models import Q
-
+from third_party.models import Vendor, Customer
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, CheckOtpSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer, ChangePasswordSerializer
 from rest_framework.generics import GenericAPIView
 
@@ -30,6 +30,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from django.contrib.auth.forms import PasswordResetForm
 from django.http import JsonResponse
+from django.db.models import Sum
 
 
 
@@ -427,5 +428,64 @@ def pie_chart(request):
     return JsonResponse(data, safe=False)
 
 
-def radar_chart(request):
-    return JsonResponse("hy")
+def bar_chart(request):
+    """Function that shows the customer number and vendor number"""
+
+    vendor_count = Vendor.objects.count()
+    customer_Count = Customer.objects.count()
+    # print(vendor_count)
+    # print(customer_Count)
+
+    total_vendor_count = [customer_Count, vendor_count]
+
+    data = {
+        "labels":["customers","vendors"],
+        "data":total_vendor_count,
+    }
+    return JsonResponse(data, safe=False)
+
+
+def bar_chart_performance_category_wise(request):
+    """This function gives the barchart of selling performance wise"""
+    # categories = list(Category.objects.values_list('name',flat=True))
+    # categories = Category.objects.all()
+    # sales = Sales.objects.all()
+    # # print(categories)
+
+    # data = []
+
+    # for sale in sales:
+    #     for s in sale.sales_items.all():
+    #         data.append(s.product.category.name)
+    
+    # data = {
+    #     "data":data
+    # }
+   
+    # print(data)
+
+    sales = Sales.objects.all()
+
+    data = {}
+    labels = []
+    values = []
+
+    for sale in sales:
+        for s in sale.sales_items.all():
+            category_name = s.product.category.name
+            if category_name in data:
+                data[category_name] += 1
+            else:
+                data[category_name] = 1
+
+    for category, value in data.items():
+        labels.append(category)
+        values.append(value)
+
+    data = {
+        'labels': labels,
+        'data': values,
+    }
+   
+
+    return JsonResponse(data, safe=False)
