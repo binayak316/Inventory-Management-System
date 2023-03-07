@@ -127,7 +127,6 @@
                             <div id="aaa" class="accordion-collapse collapse" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample1">
                                 <div class="accordion-body">
-                                    <small>pie</small>
                                     <canvas id="myChart" width="800" height="700"></canvas>
                                 </div>
                             </div>
@@ -350,9 +349,9 @@
             method : "GET",
             url : "/bar_chart_performance_category_wise",
             success : function(data){
-                console.log(data)
+                // console.log(data)
                 var ctx = document.getElementById('donut').getContext('2d');
-                var myChart = new Chart(ctx, {
+                var donut = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: data.labels,
