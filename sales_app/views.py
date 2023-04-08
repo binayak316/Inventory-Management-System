@@ -108,12 +108,12 @@ class SalesAPI(GenericAPIView):
             
             sales.sub_total = 0
             
-            sales.discount_amount = (sales.disc_percent /100) * sales.get_subtotal()
-            sales.tax_amount = float(float(sales.tax_percent)/100) * float(sales.get_subtotal()- sales.discount_amount)
+            sales.discount_amount = round((sales.disc_percent /100) * sales.get_subtotal(), 3)
+            sales.tax_amount = round(float(float(sales.tax_percent)/100) * float(sales.get_subtotal()- sales.discount_amount),3)
 
-            sales.sub_total = sales.get_subtotal()
+            sales.sub_total = round(sales.get_subtotal(), 3)
 
-            sales.grand_total = sales.get_grandtotal()
+            sales.grand_total = round(sales.get_grandtotal(), 3)
 
             sales.save()
 
