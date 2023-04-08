@@ -102,11 +102,11 @@ class PurchaseAPI(GenericAPIView):
             purchase = Purchase.objects.get(id=serializer.data['id'])
             purchase.sub_total = 0
 
-            purchase.discount_amount = (purchase.disc_percent/100) * purchase.get_subtotal()
-            purchase.tax_amount = float(float(purchase.tax_percent)/100 * float(purchase.get_subtotal() - purchase.discount_amount))
+            purchase.discount_amount = round((purchase.disc_percent/100) * purchase.get_subtotal(), 3)
+            purchase.tax_amount = round(float(float(purchase.tax_percent)/100 * float(purchase.get_subtotal() - purchase.discount_amount)), 3)
 
-            purchase.sub_total = purchase.get_subtotal()
-            purchase.grand_total = purchase.get_grandtotal()
+            purchase.sub_total = round(purchase.get_subtotal(), 3)
+            purchase.grand_total = round(purchase.get_grandtotal(), 3)
             purchase.save()
             serializer = PurchaseSerializer(purchase)
             return Response({

@@ -87,7 +87,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "Hamro Khata ",
 
     
-    "search_model": ["auth.User", "auth.Group",],
+    "search_model": [ "auth.Group",],
 
     "user_avatar": None,
 

@@ -31,7 +31,8 @@ from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from django.contrib.auth.forms import PasswordResetForm
 from django.http import JsonResponse
 from django.db.models import Sum
-
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 
 from django.contrib.auth import update_session_auth_hash
@@ -68,6 +69,7 @@ def send_mail(otp, reciever_email): # send mail le kk linxa (otp ra receiver mal
     email.send()
 
     # print(email)
+
 def check_otp(request,user_id): #user_id urls ko parameter hunxa ra target pani tei hunxa
     """Checks the OTP number of database with the mail """
     if not  request.user.is_authenticated:
@@ -80,13 +82,22 @@ def check_otp(request,user_id): #user_id urls ko parameter hunxa ra target pani 
             # print(otp.otp, user_otp)
             if otp:
                 if str(user_otp) == str(otp.otp): #after otp check
-                    target = request.session['target']
-                    if target:
-                        if target.lower().strip() == 'forgot':
-                            return redirect('/password-reset-confirm/')
-                            
-                        elif target.lower().strip() == 'register':
-                            return redirect('/login/')
+                    #check if the OTP is not expired
+                    created_at = otp.created_at
+                    expiration_time = created_at + timedelta(minutes =2)
+                    current_time = timezone.now()
+
+                    if current_time <= expiration_time:
+
+                        target = request.session['target']
+                        if target:
+                            if target.lower().strip() == 'forgot':
+                                return redirect('/password-reset-confirm/')
+                                
+                            elif target.lower().strip() == 'register':
+                                return redirect('/login/')
+                    else:
+                        messages.error(request, "OTP has expired")
                 
                 else:
                     messages.error(request, "Invalid OTP")
@@ -447,22 +458,7 @@ def bar_chart(request):
 
 def bar_chart_performance_category_wise(request):
     """This function gives the barchart of selling performance wise"""
-    # categories = list(Category.objects.values_list('name',flat=True))
-    # categories = Category.objects.all()
-    # sales = Sales.objects.all()
-    # # print(categories)
-
-    # data = []
-
-    # for sale in sales:
-    #     for s in sale.sales_items.all():
-    #         data.append(s.product.category.name)
-    
-    # data = {
-    #     "data":data
-    # }
-   
-    # print(data)
+  
 
     sales = Sales.objects.all()
 
