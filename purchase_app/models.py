@@ -31,9 +31,9 @@ class PurchaseItem(models.Model):
 
 class Purchase(models.Model):
     STATUS_CHOICES = (
-        ('Pending', 'Pending'),
+        # ('Pending', 'Pending'),
         ('Completed','Completed'),
-        ('Failed','Failed'),
+        # ('Failed','Failed'),
     )
     bill_number = models.CharField(default='PUR-1500', max_length=10, null=True, blank=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)
