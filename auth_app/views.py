@@ -457,31 +457,44 @@ def bar_chart(request):
 
 
 def bar_chart_performance_category_wise(request):
-    """This function gives the barchart of selling performance wise"""
-  
+   """This function gives the dognut of selling performance wise"""
 
-    sales = Sales.objects.all()
 
-    data = {}
-    labels = []
-    values = []
+   sales = Sales.objects.all()
 
-    for sale in sales:
-        for s in sale.sales_items.all():
-            category_name = s.product.category.name
-            if category_name in data:
-                data[category_name] += 1
-            else:
-                data[category_name] = 1
 
-    for category, value in data.items():
-        labels.append(category)
-        values.append(value)
+   data = {}
+   labels = []
+   values = []
 
+
+
+
+   for sale in sales:
+       for s in sale.sales_items.all():
+           category_name = s.product.category.name
+           if category_name in data:
+               data[category_name] += s.quantity
+           else:
+               data[category_name] = s.quantity
+   for category, value in data.items():
+       labels.append(category)
+       values.append(value)
+
+
+   data = {
+       'labels': labels,
+       'data': values,
+   }
+   return JsonResponse(data, safe=False)
+
+
+def line_chart_categorywise(request):
+    
+    """This function gives the detail category performance on line graph"""
     data = {
-        'labels': labels,
-        'data': values,
+        
     }
-   
 
-    return JsonResponse(data, safe=False)
+
+    return  JsonResponse(data, safe=False);

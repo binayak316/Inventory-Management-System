@@ -36,6 +36,7 @@ urlpatterns = [
     path('pie/', views.pie_chart, name="pie"),
     path('bar/', views.bar_chart, name='bar'),
     path('bar_chart_performance_category_wise/',views.bar_chart_performance_category_wise, name='bar_chart_performance_category_wise'),
+    path('line/', views.line_chart_categorywise, name="line"),
 
     
 
