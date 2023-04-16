@@ -41,7 +41,7 @@ class CategoryAPI(GenericAPIView):
             serializer = CategorySerializer(cat, many=True)
             return Response(serializer.data)
         else:
-            return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':"You don't have permissions"}, status=status.HTTP_401_UNAUTHORIZED)
 
     def post(self,request,*args,**kwargs):
         serializer = CategorySerializer(data = request.data)

@@ -31,7 +31,7 @@ class VendorAPI(GenericAPIView):
             serializer = VendorSerializer(vendor, many=True)
             return Response(serializer.data)
         else:
-            return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':"You don't have permissions"}, status=status.HTTP_401_UNAUTHORIZED)
 
     def post(self, request ,*args, **kwargs):
         serializer = VendorSerializer(data = request.data)
@@ -60,7 +60,7 @@ class CustomerAPI(GenericAPIView ):
             serializer = CustomerSerializer(customer, many=True)
             return Response(serializer.data)
         else:
-            return Response({'message':"You don't have permissions"},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':"You don't have permissions"},status=status.HTTP_401_UNAUTHORIZED)
 
     
     def post(self, request ,*args, **kwargs):
