@@ -14,7 +14,7 @@ class SalesItemInline(admin.TabularInline):
 class SalesAdmin(admin.ModelAdmin):
     list_display = ['serial_number','grand_total','sub_total','discount_amount','tax_amount','customer','items','invoice_number', 'status', 'sales_by', 'created_at']
     search_fields = ['customer__name', 'invoice_number']
-    list_filter = ['status',]
+    list_filter = ['status','created_at']
     readonly_fields = ['serial_number']
     models = Sales
     list_per_page=10
