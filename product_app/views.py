@@ -64,9 +64,7 @@ class ProductAPI(GenericAPIView):
     def get(self,request,pk=None,format=None):
         p = Permission.objects.filter(codename='view_product')[0]
         user = request.user
-        # print(p in user.user_permissions.all())
-
-        # if p in user.user_permissions.all():
+        
         if p in user.user_permissions.filter(pk=p.pk):
             id = pk
             if id is not None:
@@ -74,19 +72,41 @@ class ProductAPI(GenericAPIView):
                 serializer = ProductSerializer(prod)
                 return Response(serializer.data)
             prod = Product.objects.all()
-            if request.GET.get('search'):
-                search = str(request.GET.get('search'))
-                products = Product.objects.all().filter(Q(sku__exact=search))
-                if not products:
-                    return Response({'message':'No products found'}, status=status.HTTP_404_NOT_FOUND)
-                serializer = ProductSerializer(products, many=True)
+            prod_search = request.GET.get('name')
+            prod_sku_search = request.GET.get('sku')
+            if prod_search or prod_sku_search:
+                product_search = prod
+                if prod_search:
+                    product_search = product_search.filter(name__icontains=prod_search)
+                if prod_sku_search:
+                    product_search = product_search.filter(sku__contains=prod_sku_search)
+                if not product_search:
+                    return Response({'message':'No Products Found'}, status=status.HTTP_404_NOT_FOUND)
+                serializer = ProductSerializer(product_search, many=True)
                 return Response({
-                    'msg':'product you are looking for',
-                    'status': status.HTTP_200_OK, 
-                    'data' : serializer.data,
-                 }, status = status.HTTP_200_OK )
+                'msg':'product you are looking for',
+                'status': status.HTTP_200_OK, 
+                'data' : serializer.data,
+            }, status = status.HTTP_200_OK )
             serializer = ProductSerializer(prod, many=True)
             return Response(serializer.data)
+                
+        
+
+
+            # if request.GET.get('search'):
+            #     search = str(request.GET.get('search'))
+            #     products = Product.objects.all().filter(Q(sku__exact=search))
+            #     if not products:
+            #         return Response({'message':'No products found'}, status=status.HTTP_404_NOT_FOUND)
+            #     serializer = ProductSerializer(products, many=True)
+            #     return Response({
+            #         'msg':'product you are looking for',
+            #         'status': status.HTTP_200_OK, 
+            #         'data' : serializer.data,
+            #      }, status = status.HTTP_200_OK )
+            # serializer = ProductSerializer(prod, many=True)
+            # return Response(serializer.data)
         else:
             return Response({
                 'error' : "You don't have permissions "
