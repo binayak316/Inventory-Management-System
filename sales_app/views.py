@@ -41,12 +41,12 @@ class SalesAPI(GenericAPIView):
             if customer_search or status_search or created_at_str:
                 if customer_search and status_search and created_at_str:
                     created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
-                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search), Q(created_at__date=created_at))
+                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search), Q(created_at__startswith=created_at))
                 elif customer_search:
                     sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search))
                 elif status_search and created_at_str:
                     created_at = datetime.strptime(created_at_str,'%Y-%m-%d').date()
-                    sale_order = Sales.objects.filter(Q(status__icontains=status_search), Q(created_at__date=created_at))
+                    sale_order = Sales.objects.filter(Q(status__icontains=status_search), Q(created_at__startswith=created_at))
                 elif status_search:
                     sale_order = Sales.objects.filter(Q(status__icontains=status_search))
                 if not sale_order:
