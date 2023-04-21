@@ -52,20 +52,26 @@ class PurchaseAPI(GenericAPIView):
             vendor_search = request.GET.get('vendor')
             created_at_str = request.GET.get('created_at') #suru ma ta date string ko format ma aairaxa json bata 
             # print(vendor_search, created_at_str)
+
+            # for search filter with time interval
+            
             purchases = Purchase.objects.all()
-            if vendor_search or created_at_str:
+            if vendor_search or created_at_str :
                 if vendor_search and created_at_str:
                     created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
-                    purchases = purchases.filter(Q(vendor__name__icontains=vendor_search),Q(created_at__date=created_at))
+                    purchases = purchases.filter(Q(vendor__name__icontains=vendor_search),Q(created_at__startswith=created_at))
+                   
                 elif vendor_search:
                     purchases = purchases.filter(vendor__name__icontains=vendor_search)
                 elif created_at_str:
                     created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
-                    purchases = purchases.filter(created_at__date=created_at)
-                    print(purchases)
+
+                    purchases = purchases.filter(created_at__startswith=created_at)
+                   
+                
                 if not purchases:
                     return Response({'message': 'Not Found'})
-
+                    
             serializer = PurchaseSerializer(purchases, many=True)
             return Response(serializer.data)
         else:
