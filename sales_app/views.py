@@ -37,8 +37,12 @@ class SalesAPI(GenericAPIView):
             customer_search = request.GET.get('customer')
             status_search = request.GET.get('status')
             created_at_str = request.GET.get('created_at')
+
+            start_date = request.GET.get('start_date')
+            end_date = request.GET.get('end_date')
+
             # print(created_at_str)
-            if customer_search or status_search or created_at_str:
+            if customer_search or status_search or created_at_str or start_date or end_date:
                 if customer_search and status_search and created_at_str:
                     created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
                     sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search), Q(created_at__startswith=created_at))
@@ -49,6 +53,11 @@ class SalesAPI(GenericAPIView):
                     sale_order = Sales.objects.filter(Q(status__icontains=status_search), Q(created_at__startswith=created_at))
                 elif status_search:
                     sale_order = Sales.objects.filter(Q(status__icontains=status_search))
+                elif start_date and end_date:
+                    start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+                    end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+                    sale_order = Sales.objects.filter(created_at__range=(start_date, end_date))
+
                 if not sale_order:
                     return Response({'message': 'Not Found'})
                 serializer = SalesSerializer(sale_order, many=True)

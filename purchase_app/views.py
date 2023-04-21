@@ -54,9 +54,11 @@ class PurchaseAPI(GenericAPIView):
             # print(vendor_search, created_at_str)
 
             # for search filter with time interval
+            start_date = request.GET.get('start_date')
+            end_date  = request.GET.get('end_date')
             
             purchases = Purchase.objects.all()
-            if vendor_search or created_at_str :
+            if vendor_search or created_at_str or start_date or end_date:
                 if vendor_search and created_at_str:
                     created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
                     purchases = purchases.filter(Q(vendor__name__icontains=vendor_search),Q(created_at__startswith=created_at))
@@ -67,6 +69,11 @@ class PurchaseAPI(GenericAPIView):
                     created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
 
                     purchases = purchases.filter(created_at__startswith=created_at)
+                elif start_date and end_date :
+                    start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+                    end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+                    purchases = purchases.filter(created_at__range=(start_date, end_date))
+                    # print(purchases);
                    
                 
                 if not purchases:
