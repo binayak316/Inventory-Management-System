@@ -79,7 +79,7 @@ class ProductAPI(GenericAPIView):
                 if prod_search:
                     product_search = product_search.filter(name__icontains=prod_search)
                 if prod_sku_search:
-                    product_search = product_search.filter(sku__contains=prod_sku_search)
+                    product_search = product_search.filter(sku__exact=prod_sku_search)
                 if not product_search:
                     return Response({'message':'No Products Found'}, status=status.HTTP_404_NOT_FOUND)
                 serializer = ProductSerializer(product_search, many=True)
