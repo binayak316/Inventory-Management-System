@@ -336,7 +336,7 @@ class UserLoginApi(GenericAPIView):
             # print(user)
             if user is not None:
                 token = get_tokens_for_user(user)
-                return Response({'token':token,'user_id':user.id, 'msg':'Login successful'}, status= status.HTTP_200_OK)
+                return Response({'token':token,'user_id':user.id, 'msg':'Login successful', 'firstname':user.first_name, 'lastname':user.last_name}, status= status.HTTP_200_OK)
             else:
                 # return Response({'errors':'Email or Password is not valid'},status=status.HTTP_404_NOT_FOUND)
                 return Response({'errors':{'non_field_errors':['Email or Password is not valid'],'error':status.HTTP_400_BAD_REQUEST}},status=status.HTTP_400_BAD_REQUEST)
