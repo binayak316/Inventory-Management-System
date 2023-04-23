@@ -12,8 +12,8 @@ class SalesItemInline(admin.TabularInline):
     model = SalesItem
 
 class SalesAdmin(admin.ModelAdmin):
-    list_display = ['serial_number','grand_total','sub_total','discount_amount','tax_amount','customer','items','invoice_number', 'status', 'sales_by', 'created_at']
-    search_fields = ['customer__name', 'invoice_number']
+    list_display = ['serial_number','grand_total','sub_total','discount_amount','tax_amount','customer','items','invoice_number', 'status', 'sales_by', 'created_at' , 'CancelOrder']
+    search_fields = ['customer__name', 'invoice_number', 'status']
     list_filter = ['status','created_at']
     readonly_fields = ['serial_number']
     models = Sales
@@ -36,6 +36,15 @@ class SalesAdmin(admin.ModelAdmin):
         items_html += '</ul></div>'
         return format_html(items_html)
     items.short_description = 'Items'
+
+    def CancelOrder(self, obj):
+        # return 'Cancel Order'
+        
+        if obj.status =='Failed':
+            return ''
+        button_html = '<button type="button" class="btn btn-danger">Cancel Order</button>'
+        return format_html(button_html)
+    
     
     # serial number in table
     def serial_number(self, obj):
