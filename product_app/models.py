@@ -53,7 +53,7 @@ class Product(models.Model):
             self.sku = 1000
         else:
             last_sku = Product.objects.all().order_by('sku').last()
-            print(last_sku)
+            # print(last_sku)
             if last_sku is not None:
                 self.sku = int(last_sku.sku)+ 1
             else:

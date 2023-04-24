@@ -59,7 +59,7 @@ class Sales(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ('created_at',)
+        ordering = ('-created_at',)
 
     def __str__(self):
         return str(self.customer) 
@@ -81,6 +81,25 @@ class Sales(models.Model):
         grand_total = float(self.get_subtotal()) - float(discount_amount) + float(tax_amount)
         
         return grand_total
+    
+    def set_status_failed(self):
+            self.status = 'Failed'
+            self.sub_total = 0
+            self.tax_amount = 0
+            self.discount_amount  = 0
+            self.grand_total = 0
+            
+            sales_items = self.sales_items.all()
+            for sales_item in sales_items:
+                product = sales_item.product
+                quantity = sales_item.quantity
+                
+                # if status is Failed, don't decrease stock
+                if self.status == 'Failed':
+                    product.current_stock += quantity
+                    product.save()
+            
+            self.save()
 
         
 

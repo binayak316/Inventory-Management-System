@@ -38,35 +38,78 @@ class SalesAPI(GenericAPIView):
             status_search = request.GET.get('status')
             created_at_str = request.GET.get('created_at')
 
-            start_date = request.GET.get('start_date')
-            end_date = request.GET.get('end_date')
+            start_date_str = request.GET.get('start_date')
+            end_date_str = request.GET.get('end_date')
 
-            # print(created_at_str)
-            if customer_search or status_search or created_at_str or start_date or end_date:
-                if customer_search and status_search and created_at_str:
-                    created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
-                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search), Q(created_at__startswith=created_at))
-                elif customer_search:
-                    sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search))
-                elif status_search and created_at_str:
-                    created_at = datetime.strptime(created_at_str,'%Y-%m-%d').date()
-                    sale_order = Sales.objects.filter(Q(status__icontains=status_search), Q(created_at__startswith=created_at))
-                elif status_search:
-                    sale_order = Sales.objects.filter(Q(status__icontains=status_search))
-                elif start_date and end_date:
-                    start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-                    end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-                    sale_order = Sales.objects.filter(created_at__range=(start_date, end_date))
+            sale_order = Sales.objects.all()
 
-                if not sale_order:
-                    return Response({'message': 'Not Found'})
-                serializer = SalesSerializer(sale_order, many=True)
-                return Response({
-                    'msg':'Order you are looking for',
-                    'data':serializer.data
-                },status = status.HTTP_200_OK)
-            serializer = SalesSerializer(sell, many=True)
-            return Response(serializer.data)
+            # start_date = None
+            # end_date = None
+            
+            # if customer_search or status_search or created_at_str or start_date or end_date:
+            #     # done
+            #     if customer_search:
+            #         sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search))
+            #     # done
+            #     elif created_at_str:
+            #         created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
+            #         sale_order = Sales.objects.filter(created_at__startswith =created_at)
+
+                
+
+            #     # done
+            #     elif customer_search and status_search and start_date_str  and end_date_str:
+            #         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+            #         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+            #         sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search), Q(created_at__range=(start_date, end_date)))
+
+            #     # #    not done
+            #     # elif customer_search and status_search:
+            #     #     sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search),Q(status__icontains=status_search))
+            #     #     print(sale_order)
+              
+            #     # done
+            #     elif start_date_str and end_date_str:
+            #         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+            #         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+            #         sale_order = Sales.objects.filter(created_at__range=(start_date, end_date))
+
+            #     if not sale_order:
+            #         return Response({'message': 'Not Found'})
+                
+            #     serializer = SalesSerializer(sale_order, many=True)
+            #     return Response({
+            #         'data':serializer.data
+            #     },status = status.HTTP_200_OK)
+            # serializer = SalesSerializer(sell, many=True)
+            # return Response(serializer.data)
+
+            if customer_search:
+                sale_order = sale_order.filter(customer__name__icontains=customer_search)
+            
+
+            if created_at_str:
+                created_at = datetime.strptime(created_at_str, '%Y-%m-%d').date()
+                sale_order = sale_order.filter(created_at__startswith=created_at)
+            
+            if start_date_str and end_date_str:
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                sale_order = sale_order.filter(created_at__range=(start_date, end_date))
+            
+            if customer_search and status_search and start_date_str  and end_date_str:
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                sale_order = Sales.objects.filter(Q(customer__name__icontains=customer_search), Q(status__icontains=status_search), Q(created_at__range=(start_date, end_date)))
+                  
+
+            if not sale_order.exists():
+                return Response({'message': 'Not Found'})
+            serializer = SalesSerializer(sale_order, many=True)
+            return Response({
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
+
         else:
             return Response({'message':"You don't have permissions"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -74,8 +117,7 @@ class SalesAPI(GenericAPIView):
     def post(self, request ,*args, **kwargs):
 
         customer_name = request.data.get('customer')
-        # print(request.data)
-        # print(customer_name)
+       
         if customer_name is not None:
             try:
                 customer = Customer.objects.get(name=customer_name)
@@ -93,7 +135,6 @@ class SalesAPI(GenericAPIView):
         serializer = SalesSerializer(data = request.data)
 
         out_of_stock_products = []
-        # print(request.data['sales_items'], type(request.data)) sales items list ma xa so we can do loop in sales_items
         for item in request.data['sales_items']: 
             product = Product.objects.get(id=int(item['product'])) #sales items is list but the data inside list are quantity and product which are dictionaries so we can access the value of dictionary by ['name']
             if product.current_stock < int(item['quantity']):
@@ -130,16 +171,88 @@ class SalesAPI(GenericAPIView):
             #serializer = SalesSerializer(data = request.data) this includes the api with blank data
             #after serializer = SalesSerializer(sales) then it is the serializer which have the values which i put recently
             #this serializer goes to the response
-            
 
             return Response({
-                'msg':'Sales is created',
-                 'status': status.HTTP_200_OK, 
-                 'data' : serializer.data,
-                 }, status = status.HTTP_200_OK)
-        return Response({'error':serializer.errors}, status= status.HTTP_400_BAD_REQUEST)
-         
+                    'msg': 'Sales is created',
+                    'status': status.HTTP_200_OK, 
+                    'data': serializer.data,
+                }, status=status.HTTP_200_OK)
 
+            
+
+        return Response({'error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+         
+    def put(self, request, pk):
+        try:
+            sales = Sales.objects.get(pk=pk)
+        except Sales.DoesNotExist:
+            return Response({
+                'msg': f"Sales with id {pk} does not exist",
+                'status': status.HTTP_404_NOT_FOUND,
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        customer_name = request.data.get('customer')
+        if customer_name is not None:
+            try:
+                customer = Customer.objects.get(name=customer_name)
+            except Customer.DoesNotExist:
+                return Response({
+                    'msg': f"Customer with name {customer_name} does not exist",
+                    'status': status.HTTP_404_NOT_FOUND,
+                },status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                'msg':'please provide a valid customer name',
+                'status':status.HTTP_400_BAD_REQUEST
+            })
+
+        serializer = SalesSerializer(sales, data=request.data)
+
+        out_of_stock_products = []
+        for item in request.data['sales_items']: 
+            product = Product.objects.get(id=int(item['product']))
+            if product.current_stock < int(item['quantity']):
+                out_of_stock_products.append(product.name)
+
+      
+        if len(out_of_stock_products) > 0:
+            return Response(
+                {
+                    "msg" : f"[{','.join(out_of_stock_products)} ] is  out of stocks."
+                }
+            )
+
+        if serializer.is_valid():
+            serializer.validated_data['customer'] = customer
+            serializer.save()
+
+            sales.sub_total = 0
+            sales.discount_amount = round((sales.disc_percent /100) * sales.get_subtotal(), 3)
+            sales.tax_amount = round(float(float(sales.tax_percent)/100) * float(sales.get_subtotal()- sales.discount_amount),3)
+
+            sales.sub_total = round(sales.get_subtotal(), 3)
+
+            sales.grand_total = round(sales.get_grandtotal(), 3)
+
+            sales.save()
+
+        serializer = SalesSerializer(sales)
+
+        if sales.status == 'Failed':
+            sales.set_status_failed()
+            for sales_item in sales.sales_items.all():
+                product = sales_item.product
+                quantity = sales_item.quantity
+                product.current_stock += quantity
+                product.save()
+
+            return Response({
+                'msg': 'Sales is updated',
+                'status': status.HTTP_200_OK, 
+                'data': serializer.data,
+            }, status=status.HTTP_200_OK)
+        
+        Response({'error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class SalesItemAPI(GenericAPIView):
     """SalesItem is Generic Api view and it is the process of once like it only calculates total from the products and quantity """
