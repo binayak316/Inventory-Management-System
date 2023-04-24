@@ -53,4 +53,4 @@ class OtpModelAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(OtpModel,OtpModelAdmin)
+# admin.site.register(OtpModel,OtpModelAdmin)
