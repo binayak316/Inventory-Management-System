@@ -378,6 +378,9 @@ REST_FRAMEWORK = {
     #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     # )
 }
+# python manage.py runserver  192.168.0.96:2122
+# 192.168.1.72:2122
+# python manage.py runserver  192.168.1.72:2122
 
 
 LOGIN_URL = '/login/'
