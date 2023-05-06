@@ -218,7 +218,7 @@ class SalesAPI(GenericAPIView):
                 out_of_stock_products.append(product.name)
 
       
-        if len(out_of_stock_products) > 0:
+        if len(out_of_stock_products) < 0:
             return Response(
                 {
                     "msg" : f"[{','.join(out_of_stock_products)} ] is  out of stocks."
